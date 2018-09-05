@@ -1,28 +1,33 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const jwt = require("express-jwt");
+const mongoose = require("mongoose");
+const cors = require("cors");
 
 const app = express();
-
-const models = require("./models");
-
-//Sync Database
-models.sequelize
-  .sync()
-  .then(function() {
-    console.log("Nice! Database looks fine");
-  })
-  .catch(function(err) {
-    console.log(err, "Something went wrong with the Database Update!");
-  });
-
-app.use(bodyParser.json());
 
 const authRoutes = require("./routes/authRoutes");
 const apiRoutes = require("./routes/apiRoutes");
 
-app.use("/api/auth", authRoutes);
+require("dotenv").config();
 
-app.use("/api", apiRoutes);
+const url = process.env.DATABASEURL || "mongodb://localhost/pos";
+mongoose.connect(
+  url,
+  { useNewUrlParser: true }
+);
+
+app.use(cors());
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+const auth = jwt({
+  secret: process.env.JWT_SECRET
+});
+
+app.use("/auth", authRoutes);
+app.use("/api", auth, apiRoutes);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
@@ -34,4 +39,6 @@ if (process.env.NODE_ENV === "production") {
 }
 
 const PORT = process.env.PORT || 8000;
-app.listen(PORT);
+app.listen(PORT, () => {
+  console.log(`server started at port ${PORT}`);
+});
