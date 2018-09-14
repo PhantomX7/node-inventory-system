@@ -1,47 +1,22 @@
-const mongoose = require("mongoose");
-
-const productSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true
+"use strict";
+module.exports = (sequelize, DataTypes) => {
+  const Product = sequelize.define(
+    "Product",
+    {
+      name: { type: DataTypes.STRING },
+      pinyin: { type: DataTypes.STRING },
+      image_url: { type: DataTypes.STRING },
+      stock: { type: DataTypes.INTEGER },
+      unit: { type: DataTypes.STRING },
+      description: { type: DataTypes.STRING },
+      price_capital: { type: DataTypes.DOUBLE },
+      sell_price_credit: { type: DataTypes.DOUBLE },
+      sell_price_cash: { type: DataTypes.DOUBLE }
     },
-    pinyin: {
-      type: String
-    },
-    image_url: {
-      type:String
-    },
-    stock: {
-      type: Number,
-      required: true,
-      min: [0, "Out of Stock"]
-    },
-    unit: {
-      type: String,
-      required: true
-    },
-    description: {
-      type: String
-    },
-    price_capital: {
-      type: Number,
-      required: true
-    },
-    sell_price_credit: {
-      type: Number,
-      required: true
-    },
-    sell_price_cash: {
-      type: Number,
-      required: true
-    }
-  },
-  {
-    timestamps: true
-  }
-);
-
-const Product = mongoose.model("Product", productSchema);
-
-module.exports = Product;
+    {}
+  );
+  Product.associate = function(models) {
+    // associations can be defined here
+  };
+  return Product;
+};

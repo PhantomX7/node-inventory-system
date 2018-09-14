@@ -1,19 +1,14 @@
-const mongoose = require("mongoose");
-const User = require("./user");
-
-const roleSchema = new mongoose.Schema(
-  {
-    role: {
-      type: String,
-      required: true,
-      maxLength: 20
-    }
-  },
-  {
-    timestamps: true
-  }
-);
-
-const Role = mongoose.model("Role", roleSchema);
-
-module.exports = Role;
+"use strict";
+module.exports = (sequelize, DataTypes) => {
+  const Role = sequelize.define(
+    "Role",
+    {
+      name: DataTypes.STRING
+    },
+    { timestamps: true }
+  );
+  Role.associate = function(models) {
+    // associations can be defined here
+  };
+  return Role;
+};

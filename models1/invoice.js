@@ -17,7 +17,8 @@ const invoiceSchema = new mongoose.Schema(
     payment_status: {
       type: String,
       required:true
-    }
+    },
+    transaction:[]
     transaction_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Transaction"

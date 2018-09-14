@@ -11,11 +11,11 @@ const apiRoutes = require("./routes/apiRoutes");
 
 require("dotenv").config();
 
-const url = process.env.DATABASEURL || "mongodb://localhost/pos";
-mongoose.connect(
-  url,
-  { useNewUrlParser: true }
-);
+// const url = process.env.DATABASEURL || "mongodb://localhost/pos";
+// mongoose.connect(
+//   url,
+//   { useNewUrlParser: true }
+// );
 
 app.use(cors());
 

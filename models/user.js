@@ -1,49 +1,43 @@
-const mongoose = require("mongoose");
+"use strict";
 const bcrypt = require("bcrypt");
 
-const userSchema = new mongoose.Schema(
-  {
-    username: {
-      type: String,
-      required: true,
-      unique: true
+module.exports = (sequelize, DataTypes) => {
+  const User = sequelize.define(
+    "User",
+    {
+      username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      roleID: DataTypes.INTEGER
     },
-    password: {
-      type: String,
-      required: true
-    },
-    role_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Role"
+    {
+      timestamps: true,
+      hooks: {
+        beforeCreate: async (user, options, cb) => {
+          let hashedPassword = await bcrypt.hash(user.password, 10);
+          user.password = hashedPassword;
+        }
+      }
     }
-  },
-  {
-    timestamps: true
-  }
-);
+  );
+  User.associate = function(models) {
+    // associations can be defined here
+    User.belongsTo(models.Role, { foreignKey: "roleID" });
+  };
 
-userSchema.pre("save", async function(next) {
-  try {
-    if (!this.isModified("password")) {
-      return next();
-    }
-    let hashedPassword = await bcrypt.hash(this.password, 10);
-    this.password = hashedPassword;
-    return next();
-  } catch (err) {
-    return next(err);
-  }
-});
-
-userSchema.methods.comparePassword = async function(candidatePassword, next) {
-  try {
-    let isMatch = await bcrypt.compare(candidatePassword, this.password);
+  User.prototype.comparePassword = async function(candidatePassword) {
+    let isMatch = await bcrypt.compare(
+      candidatePassword,
+      this.getDataValue("password")
+    );
     return isMatch;
-  } catch (err) {
-    return next(err);
-  }
+  };
+  
+  return User;
 };
-
-const User = mongoose.model("User", userSchema);
-
-module.exports = User;

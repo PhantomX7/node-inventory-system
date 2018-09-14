@@ -15,8 +15,8 @@ router.get("/", (req, res) => {
 router.get("/me", getMe);
 
 //product routes
-router.get("/product", getProducts);
-router.post("/product", addProduct);
-router.post("/product/:id", updateProduct);
+// router.get("/product", getProducts);
+// router.post("/product", addProduct);
+// router.post("/product/:id", updateProduct);
 
 module.exports = router;
