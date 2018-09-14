@@ -13,6 +13,9 @@ import SideNav, {
   NavText,
 } from '@trendmicro/react-sidenav';
 import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { push } from 'react-router-redux';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoffee, faBox } from '@fortawesome/free-solid-svg-icons';
@@ -20,19 +23,20 @@ import { faCoffee, faBox } from '@fortawesome/free-solid-svg-icons';
 // Be sure to include styles at some point, probably during your bootstraping
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 
-const SideNavCustom = ({ location, history }) => (
+const SideNavCustom = ({ location, push }) => (
   <React.Fragment>
     <SideNav
       onSelect={selected => {
         const to = `/dashboard/${selected}`;
         if (location.pathname !== to) {
-          history.push(to);
+          push(to);
         }
       }}
+      style={{ position: 'fixed' }}
     >
       <Toggle />
-      <Nav defaultSelected="dashboard">
-        <NavItem eventKey="dashboard">
+      <Nav defaultSelected="main">
+        <NavItem eventKey="main">
           <NavIcon>
             <FontAwesomeIcon icon={faCoffee} />
           </NavIcon>
@@ -49,4 +53,11 @@ const SideNavCustom = ({ location, history }) => (
   </React.Fragment>
 );
 
-export default withRouter(SideNavCustom);
+const withConnect = connect(
+  null,
+  { push },
+);
+export default compose(
+  withRouter,
+  withConnect,
+)(SideNavCustom);

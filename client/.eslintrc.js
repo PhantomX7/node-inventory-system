@@ -66,6 +66,10 @@ module.exports = {
     'jsx-a11y/label-has-for': 0,
     'jsx-a11y/anchor-is-valid': 0,
     'no-useless-escape': 0,
+    'jsx-a11y/click-events-have-key-events': 0,
+    'jsx-a11y/interactive-supports-focus': 0,
+    'no-underscore-dangle': ['error', { allow: ['_id'] }],
+    'camelcase': 0,
   },
   settings: {
     'import/resolver': {

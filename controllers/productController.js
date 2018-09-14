@@ -1,4 +1,4 @@
-const { Product } = require("../models");
+const { Product, StockAdustment } = require("../models");
 
 const getProducts = async (req, res) => {
   const products = await Product.find(
@@ -22,21 +22,45 @@ const updateProduct = async (req, res) => {
   const {
     name,
     pinyin,
+    stock,
+    stock_description,
     unit,
     description,
     price_capital,
     sell_price_credit,
     sell_price_cash
   } = req.body;
-  const product = await Product.findByIdAndUpdate(req.params.id, {
-    name,
-    pinyin,
-    unit,
-    description,
-    price_capital,
-    sell_price_credit,
-    sell_price_cash
+
+  const { id } = req.params;
+
+  const currentProduct = await Product.findById(id);
+  const currentStock = currentProduct.stock;
+  const stockMutation = stock - currentStock;
+  if (stock !== currentStock) {
+    await StockAdustment.create({
+      product_id: id,
+      amount: stockMutation,
+      description: stock_description
+    });
+  }
+
+  const product = await Product.findByIdAndUpdate(
+    id,
+    {
+      name,
+      pinyin,
+      stock,
+      unit,
+      description,
+      price_capital,
+      sell_price_credit,
+      sell_price_cash
+    },
+    { runValidators: true }
+  );
+  return res.status(200).json({
+    product
   });
 };
 
-module.exports = { getProducts, addProduct };
+module.exports = { getProducts, addProduct, updateProduct };

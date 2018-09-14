@@ -9,6 +9,9 @@ const productSchema = new mongoose.Schema(
     pinyin: {
       type: String
     },
+    image_url: {
+      type:String
+    },
     stock: {
       type: Number,
       required: true,

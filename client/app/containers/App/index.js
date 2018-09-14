@@ -10,21 +10,22 @@
  * reloading is not a necessity for you then you can refactor it and remove
  * the linting exception.
  */
-
 import React, { Component } from 'react';
 import { compose } from 'redux';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import LoginPage from 'containers/LoginPage/Loadable';
 import Dashboard from 'containers/Dashboard/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
 import injectReducer from 'utils/injectReducer';
 import reducer from './reducer';
 
 import { getMe } from './actions';
+
+import './app.css';
 
 class App extends Component {
   componentDidMount() {
@@ -62,6 +63,7 @@ const withConnect = connect(
 const withReducer = injectReducer({ key: 'auth', reducer });
 
 export default compose(
+  withRouter,
   withReducer,
   withConnect,
 )(App);

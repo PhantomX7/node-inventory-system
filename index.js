@@ -29,6 +29,13 @@ const auth = jwt({
 app.use("/auth", authRoutes);
 app.use("/api", auth, apiRoutes);
 
+app.use(function(err, req, res, next) {
+  if (err.name === "UnauthorizedError") {
+    res.status(err.status).send(err.message);
+  }
+  next();
+});
+
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 

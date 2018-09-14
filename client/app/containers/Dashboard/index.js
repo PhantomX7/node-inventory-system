@@ -6,27 +6,48 @@
 
 import React, { Component } from 'react';
 import { Helmet } from 'react-helmet';
-import { Route, Switch } from 'react-router-dom';
-import SideNav from '../../components/SideNav';
+import { Route, Switch, withRouter } from 'react-router-dom';
+
+// import SideNav from '../../components/SideNav';
+import DashboardMainPage from '../DashboardMainPage';
+import ProductPage from '../ProductPage';
+import Drawer from './Drawer';
 
 /* eslint-disable react/prefer-stateless-function */
 export class Dashboard extends Component {
+  changeRoute = selected => {
+    const { location, history } = this.props;
+    const to = `/dashboard/${selected}`;
+    if (location.pathname !== to) {
+      history.push(to);
+    }
+  };
+
+  menus = {
+    name: 'home',
+    path: 'home',
+  };
+
   render() {
+    const { location } = this.props;
     return (
       <div>
         <Helmet>
           <title>Dashboard</title>
           <meta name="description" content="dashboard" />
         </Helmet>
-        <SideNav />
-        <Switch>
-          <Route path="/dashboard/main" exact component={() => <div>Hi</div>} />
-          {/* <Route path="/home" component={props => <Home />} />
-          <Route path="/devices" component={props => <Devices />} /> */}
-        </Switch>
+        {/* <SideNav /> */}
+        <Drawer changeRoute={this.changeRoute} selected={location.pathname}>
+          <Switch>
+            <Route path="/dashboard/main" exact component={DashboardMainPage} />
+            <Route path="/dashboard/product" exact component={ProductPage} />
+            {/* <Route path="/home" component={props => <Home />} />
+            <Route path="/devices" component={props => <Devices />} /> */}
+          </Switch>
+        </Drawer>
       </div>
     );
   }
 }
 
-export default Dashboard;
+export default withRouter(Dashboard);

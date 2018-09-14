@@ -21,6 +21,6 @@ export function signin(values) {
     localStorage.setItem('token', data.token);
     dispatch({ type: SET_TOKEN, payload: data.token });
     dispatch({ type: AUTH_USER, payload: data.user });
-    dispatch(push('/dashboard'));
+    dispatch(push('/dashboard/main'));
   };
 }

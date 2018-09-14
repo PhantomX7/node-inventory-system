@@ -12,7 +12,6 @@ export function getMe() {
       const { data } = await axios.get(`${ROOT_URL}/api/me`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
-      console.log(data);
       dispatch({
         type: AUTH_USER,
         payload: data.user,
