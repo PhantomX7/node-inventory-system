@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false
       },
-      roleID: DataTypes.INTEGER
+      roleId: { type: DataTypes.INTEGER, allowNull: false }
     },
     {
       timestamps: true,
@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
   );
   User.associate = function(models) {
     // associations can be defined here
-    User.belongsTo(models.Role, { foreignKey: "roleID" });
+    User.belongsTo(models.Role, { foreignKey: "roleId" });
   };
 
   User.prototype.comparePassword = async function(candidatePassword) {
@@ -38,6 +38,6 @@ module.exports = (sequelize, DataTypes) => {
     );
     return isMatch;
   };
-  
+
   return User;
 };

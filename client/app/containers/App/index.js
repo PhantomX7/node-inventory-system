@@ -15,6 +15,9 @@ import { compose } from 'redux';
 import { Switch, Route, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import LoginPage from 'containers/LoginPage/Loadable';
 import Dashboard from 'containers/Dashboard/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
@@ -42,6 +45,7 @@ class App extends Component {
           <Route path="/dashboard" component={Dashboard} />
           <Route component={NotFoundPage} />
         </Switch>
+        <ToastContainer />
       </div>
     );
   }

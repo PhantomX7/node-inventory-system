@@ -71,7 +71,7 @@ export class ProductPage extends React.Component {
             <ProductEditModal
               onClose={() => this.setState({ modalEditProductVisible: false })}
               visible={modalEditProductVisible}
-              product={products.find(product => product._id === editProductId)}
+              product={products.find(product => product.id === editProductId)}
             />
             <Card>
               <CardHeader color="primary">

@@ -19,7 +19,7 @@ export default ({ products, onClick }) => (
           const menus = [
             {
               name: 'Edit Product',
-              onClick: () => onClick(props.original._id),
+              onClick: () => onClick(props.original.id),
             },
           ];
           return (

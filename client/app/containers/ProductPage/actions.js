@@ -37,7 +37,7 @@ export function addProduct(values, callback) {
 
 export function editProduct(id, values, callback) {
   return async dispatch => {
-    await axios.post(`${ROOT_URL}/api/product/${id}`, values, {
+    await axios.put(`${ROOT_URL}/api/product/${id}`, values, {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
     });
     fetchProducts(dispatch);

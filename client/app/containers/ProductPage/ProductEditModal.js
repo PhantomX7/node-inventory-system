@@ -19,7 +19,7 @@ class ProductEditModal extends Component {
   handleFormSubmit = values => {
     const { editProduct, onClose, reset, product } = this.props;
     this.setState({ loading: true });
-    editProduct(product._id, values.toObject(), () => {
+    editProduct(product.id, values.toObject(), () => {
       onClose();
       reset();
       this.setState({ loading: false });

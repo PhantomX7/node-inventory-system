@@ -2,7 +2,10 @@ const { User, Role } = require("../models");
 const jsonwebtoken = require("jsonwebtoken");
 
 const getRoles = async (req, res) => {
-  const roles = await Role.findAll({ attributes: ["id", "name"] });
+  const roles = await Role.findAll({
+    attributes: ["id", "name"],
+    // include: [{ model: User, attributes: ["username"] }]
+  });
   return res.json({ roles });
 };
 
@@ -46,9 +49,9 @@ const signin = async (req, res) => {
 
 const signup = async (req, res) => {
   try {
-    const { username, password, roleID } = req.body;
+    const { username, password, roleId } = req.body;
 
-    const user = await User.create({ username, password, roleID });
+    const user = await User.create({ username, password, roleId });
     const role = await user.getRole();
 
     const token = jsonwebtoken.sign(
