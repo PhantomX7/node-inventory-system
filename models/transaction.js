@@ -35,6 +35,9 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     Transaction.belongsTo(models.Product, { foreignKey: "productId" });
     Transaction.belongsTo(models.Invoice, { foreignKey: "invoiceId" });
+    Transaction.belongsTo(models.StockMutation, {
+      foreignKey: "stockMutationId"
+    });
   };
   return Transaction;
 };

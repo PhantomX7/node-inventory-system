@@ -4,7 +4,12 @@ import Button from '@material-ui/core/Button';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import accounting from 'accounting';
-import { Field, reduxForm, getFormValues } from 'redux-form/immutable';
+import {
+  Field,
+  reduxForm,
+  getFormValues,
+  SubmissionError,
+} from 'redux-form/immutable';
 import { Clear as ClearIcon } from '@material-ui/icons';
 import TextInput from '../../components/TextInput';
 import LoadingButton from '../../components/LoadingButton';
@@ -16,14 +21,23 @@ class ProductEditModal extends Component {
     loading: false,
   };
 
-  handleFormSubmit = values => {
+  handleFormSubmit = async values => {
     const { editProduct, onClose, reset, product } = this.props;
     this.setState({ loading: true });
-    editProduct(product.id, values.toObject(), () => {
-      onClose();
-      reset();
+    try {
+      await editProduct(product.id, values.toObject(), () => {
+        onClose();
+        reset();
+        this.setState({ loading: false });
+      });
+    } catch ({ response }) {
       this.setState({ loading: false });
-    });
+      response.data.error.errors.forEach(error => {
+        throw new SubmissionError({
+          [error.path]: error.message,
+        });
+      });
+    }
   };
 
   render() {

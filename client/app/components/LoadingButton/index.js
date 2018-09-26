@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './button.scss';
 
 // recieve loading and click as props
-const LoadingButton = ({ name, className, isLoading, click }) => {
+const LoadingButton = ({ name, className, isLoading, click, type }) => {
   if (isLoading) {
     return (
       <button
@@ -20,7 +20,7 @@ const LoadingButton = ({ name, className, isLoading, click }) => {
     );
   }
   return (
-    <button className={className} action="submit" onClick={click}>
+    <button className={className} type={type} onClick={click}>
       {name}
     </button>
   );
@@ -29,6 +29,7 @@ const LoadingButton = ({ name, className, isLoading, click }) => {
 LoadingButton.defaultProps = {
   click: () => {},
   className: 'button',
+  type: 'submit',
 };
 
 LoadingButton.propTypes = {
@@ -36,6 +37,7 @@ LoadingButton.propTypes = {
   className: PropTypes.string,
   name: PropTypes.string.isRequired,
   isLoading: PropTypes.bool.isRequired,
+  type: PropTypes.string,
 };
 
 export default LoadingButton;

@@ -11,8 +11,8 @@ module.exports = {
       image_url: {
         type: Sequelize.STRING
       },
-      customer: {
-        type: Sequelize.STRING,
+      customerId: {
+        type: Sequelize.INTEGER,
         allowNull: false
       },
       total_capital: {
@@ -23,6 +23,12 @@ module.exports = {
         type: Sequelize.DOUBLE,
         allowNull: false
       },
+      total_profit: {
+        type: Sequelize.DOUBLE,
+        allowNull: false
+      },
+      description: { type: Sequelize.STRING },
+      payment_type: { type: Sequelize.STRING },
       payment_status: {
         type: Sequelize.BOOLEAN,
         allowNull: false
@@ -37,6 +43,9 @@ module.exports = {
       },
       updatedAt: {
         allowNull: false,
+        type: Sequelize.DATE
+      },
+      deletedAt: {
         type: Sequelize.DATE
       }
     });

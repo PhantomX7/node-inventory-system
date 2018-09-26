@@ -168,6 +168,15 @@ function validate(values) {
   if (!sell_price_credit) {
     errors.sell_price_credit = 'Please enter a sell price credit';
   }
+  if (price_capital && price_capital <= 0) {
+    errors.price_capital = 'Please enter a valid price capital';
+  }
+  if (sell_price_cash && sell_price_cash <= 0) {
+    errors.sell_price_cash = 'Please enter a valid sell price cash';
+  }
+  if (!sell_price_credit && sell_price_credit) {
+    errors.sell_price_credit = 'Please enter a valid sell price credit';
+  }
 
   // errors is empty, the form is fine to submit
   // if errors has any properties, redux form assumes form is invalid

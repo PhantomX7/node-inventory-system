@@ -11,6 +11,7 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 // import SideNav from '../../components/SideNav';
 import DashboardMainPage from '../DashboardMainPage';
 import ProductPage from '../ProductPage';
+import CustomerPage from '../CustomerPage';
 import Drawer from './Drawer';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -21,11 +22,6 @@ export class Dashboard extends Component {
     if (location.pathname !== to) {
       history.push(to);
     }
-  };
-
-  menus = {
-    name: 'home',
-    path: 'home',
   };
 
   render() {
@@ -41,8 +37,7 @@ export class Dashboard extends Component {
           <Switch>
             <Route path="/dashboard/main" exact component={DashboardMainPage} />
             <Route path="/dashboard/product" exact component={ProductPage} />
-            {/* <Route path="/home" component={props => <Home />} />
-            <Route path="/devices" component={props => <Devices />} /> */}
+            <Route path="/dashboard/customer" exact component={CustomerPage} />
           </Switch>
         </Drawer>
       </div>

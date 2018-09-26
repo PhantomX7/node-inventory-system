@@ -6,13 +6,24 @@ const {
   addProduct,
   updateProduct
 } = require("../controllers/productController");
-const { getCustomers } = require("../controllers/customerController");
+const {
+  getCustomers,
+  addCustomer,
+  updateCustomer,
+  deleteCustomer
+} = require("../controllers/customerController");
+const {
+  getInvoices,
+  addInvoice,
+  getInvoiceById
+} = require("../controllers/invoiceController");
+const {
+  addTransaction,
+  updateTransaction,
+  deleteTransaction
+} = require("../controllers/transactionController");
 const { getMe } = require("../controllers/authController");
 
-router.get("/", (req, res) => {
-  console.log(User);
-  res.json({ nama: "celine" });
-});
 router.get("/me", getMe);
 
 //product routes
@@ -22,7 +33,18 @@ router.put("/product/:id", updateProduct);
 
 //customer routes
 router.get("/customer", getCustomers);
-// router.post("/product", addProduct);
-// router.post("/product/:id", updateProduct);
+router.post("/customer", addCustomer);
+router.put("/customer/:id", updateCustomer);
+router.delete("/customer/:id", deleteCustomer);
+
+//invoice routes
+router.get("/invoice", getInvoices);
+router.post("/invoice", addInvoice);
+router.get("/invoice/:id", getInvoiceById);
+
+//transaction routes
+router.post("/transaction", addTransaction);
+router.put("/transaction/:id", updateTransaction);
+router.delete("/transaction/:id", deleteTransaction);
 
 module.exports = router;

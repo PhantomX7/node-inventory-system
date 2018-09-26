@@ -1,6 +1,11 @@
-.button {
-  background-color: #42a5f5;
-  // flex: 1 1 auto;
+.highlight:hover {
+  cursor: pointer;
+  background-color: #f5f5f5;
+}
+
+.deleteButton {
+  background-color: #ff1744;
+  flex: 1 1 auto;
   min-width: 150px;
   padding: 8px;
   border: 0px solid #f7f7f7;

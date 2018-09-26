@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
   StockMutation.associate = function(models) {
     // associations can be defined here
     StockMutation.belongsTo(models.Product, { foreignKey: "productId" });
+    StockMutation.hasOne(models.Transaction, { foreignKey: "stockMutationId" });
   };
   return StockMutation;
 };

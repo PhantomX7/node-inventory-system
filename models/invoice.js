@@ -15,13 +15,21 @@ module.exports = (sequelize, DataTypes) => {
         validate: { min: 0, isDecimal: true },
         allowNull: false
       },
+      total_profit: {
+        type: DataTypes.DOUBLE,
+        validate: { min: 0, isDecimal: true },
+        allowNull: false
+      },
+      description: { type: DataTypes.STRING },
+      payment_type: { type: DataTypes.STRING },
       payment_status: { type: DataTypes.BOOLEAN, allowNull: false },
       date: { type: DataTypes.DATE, allowNull: false }
     },
-    { timestamps: true }
+    { timestamps: true, paranoid: true }
   );
   Invoice.associate = function(models) {
     Invoice.belongsTo(models.Customer, { foreignKey: "customerId" });
+    Invoice.hasMany(models.Transaction, { foreignKey: "invoiceId" });
   };
   return Invoice;
 };

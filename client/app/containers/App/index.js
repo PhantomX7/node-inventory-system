@@ -22,6 +22,8 @@ import LoginPage from 'containers/LoginPage/Loadable';
 import Dashboard from 'containers/Dashboard/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 
+import requireAuth from 'hoc/requireAuth';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import injectReducer from 'utils/injectReducer';
 import reducer from './reducer';
@@ -42,7 +44,7 @@ class App extends Component {
       <div>
         <Switch>
           <Route exact path="/" component={LoginPage} />
-          <Route path="/dashboard" component={Dashboard} />
+          <Route path="/dashboard" component={requireAuth(Dashboard)} />
           <Route component={NotFoundPage} />
         </Switch>
         <ToastContainer />

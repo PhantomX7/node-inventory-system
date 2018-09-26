@@ -1,18 +1,16 @@
 import React from 'react';
 import ReactTable from 'react-table';
-import accounting from 'accounting';
 import matchSorter from 'match-sorter';
 import Menu from 'components/Menu';
-
 import EditIcon from '@material-ui/icons/Edit';
 
-export default ({ products, onClick }) => (
+export default ({ customers, onClick }) => (
   <ReactTable
     filterable
     defaultFilterMethod={(filter, row) =>
       String(row[filter.id]) === filter.value
     }
-    data={products}
+    data={customers}
     columns={[
       {
         Header: 'Name',
@@ -20,7 +18,7 @@ export default ({ products, onClick }) => (
         Cell: props => {
           const menus = [
             {
-              name: 'Edit Product',
+              name: 'Edit Customer',
               onClick: () => onClick(props.original.id),
             },
           ];
@@ -44,38 +42,18 @@ export default ({ products, onClick }) => (
         filterAll: true,
       },
       {
-        Header: 'Pinyin',
-        accessor: 'pinyin',
+        Header: 'Address',
+        accessor: 'address',
         filterMethod: (filter, rows) =>
-          matchSorter(rows, filter.value, { keys: ['pinyin'] }),
+          matchSorter(rows, filter.value, { keys: ['address'] }),
         filterAll: true,
       },
       {
-        Header: 'Stock',
-        accessor: 'stock',
-      },
-      {
-        Header: 'Unit',
-        accessor: 'unit',
-      },
-      {
-        Header: 'Description',
-        accessor: 'description',
-      },
-      {
-        Header: 'Price Capital',
-        accessor: 'price_capital',
-        Cell: d => accounting.formatMoney(d.value, 'Rp. ', 2),
-      },
-      {
-        Header: 'Sell Price Credit',
-        accessor: 'sell_price_credit',
-        Cell: d => accounting.formatMoney(d.value, 'Rp. ', 2),
-      },
-      {
-        Header: 'Sell Price Cash',
-        accessor: 'sell_price_cash',
-        Cell: d => accounting.formatMoney(d.value, 'Rp. ', 2),
+        Header: 'Phone',
+        accessor: 'phone',
+        filterMethod: (filter, rows) =>
+          matchSorter(rows, filter.value, { keys: ['address'] }),
+        filterAll: true,
       },
     ]}
   />

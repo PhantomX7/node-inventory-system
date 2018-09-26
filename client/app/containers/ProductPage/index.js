@@ -28,6 +28,8 @@ import reducer from './reducer';
 
 import { getProducts } from './actions';
 
+import './productPage.scss';
+
 /* eslint-disable react/prefer-stateless-function */
 export class ProductPage extends React.Component {
   state = {
