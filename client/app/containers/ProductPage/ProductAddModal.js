@@ -96,10 +96,10 @@ class ProductAddModal extends Component {
                 type="text"
               />
               <Field
-                name="price_capital"
+                name="capital_price"
                 component={TextInput}
                 label={`Price Capital : ${accounting.formatMoney(
-                  formStates && formStates.get('price_capital'),
+                  formStates && formStates.get('capital_price'),
                   'Rp. ',
                   2,
                 )}`}

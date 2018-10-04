@@ -12,19 +12,19 @@ module.exports = {
         isBetaMember: false
       }], {});
     */
-    return queryInterface.bulkInsert(
-      "Users",
-      [
-        {
-          username: "admin",
-          password: "password",
-          roleID: 1,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        }
-      ],
-      {}
-    );
+    // return queryInterface.bulkInsert(
+    //   "Users",
+    //   [
+    //     {
+    //       username: "admin",
+    //       password: "password",
+    //       roleID: 1,
+    //       createdAt: new Date(),
+    //       updatedAt: new Date()
+    //     }
+    //   ],
+    //   {}
+    // );
   },
 
   down: (queryInterface, Sequelize) => {

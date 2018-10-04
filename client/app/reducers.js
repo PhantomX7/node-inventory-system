@@ -10,6 +10,8 @@ import { reducer as formReducer } from 'redux-form/immutable';
 
 import languageProviderReducer from 'containers/LanguageProvider/reducer';
 
+import customerReducer from 'containers/CustomerPage/reducer';
+import productReducer from 'containers/ProductPage/reducer';
 /*
  * routeReducer
  *
@@ -46,6 +48,8 @@ export default function createReducer(injectedReducers) {
     route: routeReducer,
     form: formReducer,
     language: languageProviderReducer,
+    customers: customerReducer,
+    products: productReducer,
     ...injectedReducers,
   });
 }

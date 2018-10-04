@@ -18,12 +18,12 @@ import Card from 'components/Card/Card';
 import CardHeader from 'components/Card/CardHeader';
 import CardBody from 'components/Card/CardBody';
 
-import injectReducer from 'utils/injectReducer';
+// import injectReducer from 'utils/injectReducer';
 import CustomerTable from './CustomerTable';
 import CustomerAddModal from './CustomerAddModal';
 import CustomerEditModal from './CustomerEditModal';
 
-import reducer from './reducer';
+// import reducer from './reducer';
 
 import { getCustomers } from './actions';
 
@@ -119,9 +119,9 @@ const withConnect = connect(
   { getCustomers },
 );
 
-const withReducer = injectReducer({ key: 'customers', reducer });
+// const withReducer = injectReducer({ key: 'customers', reducer });
 
 export default compose(
-  withReducer,
+  // withReducer,
   withConnect,
 )(CustomerPage);

@@ -29,7 +29,7 @@ const updateProduct = async (req, res) => {
     stock_description,
     unit,
     description,
-    price_capital,
+    capital_price,
     sell_price_credit,
     sell_price_cash
   } = req.body;
@@ -59,7 +59,7 @@ const updateProduct = async (req, res) => {
         stock,
         unit,
         description,
-        price_capital,
+        capital_price,
         sell_price_credit,
         sell_price_cash
       },

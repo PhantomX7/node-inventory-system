@@ -1,10 +1,25 @@
-const { Invoice, Transaction, sequelize } = require("../models");
+const {
+  Invoice,
+  Transaction,
+  Customer,
+  Product,
+  sequelize
+} = require("../models");
 
 const getInvoices = async (req, res) => {
   const invoices = await Invoice.findAll({
     attributes: {
       exclude: ["createdAt", "updatedAt"]
-    }
+    },
+    include: [
+      {
+        model: Customer,
+        paranoid: false,
+        attributes: {
+          exclude: ["createdAt", "updatedAt"]
+        }
+      }
+    ]
   });
   return res.status(200).json({
     invoices
@@ -15,7 +30,30 @@ const getInvoiceById = async (req, res) => {
   const { id } = req.params;
   const invoice = await Invoice.findOne({
     where: { id },
-    include: [{ model: Transaction }]
+    attributes: {
+      exclude: ["createdAt", "updatedAt"]
+    },
+    include: [
+      {
+        model: Customer,
+        paranoid: false,
+        attributes: {
+          exclude: ["createdAt", "updatedAt"]
+        }
+      },
+      {
+        model: Transaction,
+        attributes: {
+          exclude: ["createdAt", "updatedAt"]
+        },
+        include: [
+          {
+            model: Product,
+            attributes: ["name", "pinyin"]
+          }
+        ]
+      }
+    ]
   });
 
   return res.status(200).json({

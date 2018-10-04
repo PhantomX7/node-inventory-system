@@ -8,14 +8,7 @@ const {
 
 const addTransaction = async (req, res) => {
   // try {
-  const {
-    invoiceId,
-    productId,
-    capital_price,
-    sell_price,
-    amount,
-    date
-  } = req.body;
+  const { invoiceId, productId, capital_price, sell_price, amount } = req.body;
   const total_sell_price = sell_price * amount;
   const total_capital = capital_price * amount;
   const profit = total_sell_price - total_capital;
@@ -37,6 +30,7 @@ const addTransaction = async (req, res) => {
       },
       { where: { id: productId }, transaction: tx }
     );
+    const invoice = await Invoice.findById(invoiceId);
     transaction = await Transaction.create(
       {
         invoiceId,
@@ -47,7 +41,7 @@ const addTransaction = async (req, res) => {
         profit,
         amount,
         stockMutationId: stockMutation.id,
-        date
+        date: invoice.date
       },
       { transaction: tx }
     );
@@ -127,9 +121,8 @@ const updateTransaction = async (req, res) => {
 const deleteTransaction = async (req, res) => {
   try {
     const transactionId = req.params.id;
+    const transaction = await Transaction.findById(transactionId);
     await sequelize.transaction(async tx => {
-      const transaction = await Transaction.findById(transactionId);
-
       await StockMutation.destroy({
         where: { id: transaction.stockMutationId },
         transaction: tx
@@ -148,12 +141,11 @@ const deleteTransaction = async (req, res) => {
         where: { id: transactionId },
         transaction: tx
       });
-
-      return res.status(200).json({
-        transaction: deleteTransaction
-      });
     });
-    await updateInvoice(invoiceId);
+    await updateInvoice(transaction.invoiceId);
+    return res.status(200).json({
+      transaction
+    });
   } catch (err) {
     return res.status(400).json({
       error: err
@@ -184,7 +176,6 @@ const updateInvoice = async invoiceId => {
       },
       { where: { id: invoiceId }, transaction: tx }
     );
-    console.log("===========");
   });
 };
 

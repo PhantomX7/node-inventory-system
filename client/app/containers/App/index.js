@@ -18,9 +18,13 @@ import { connect } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import 'react-table/react-table.css';
+
 import LoginPage from 'containers/LoginPage/Loadable';
 import Dashboard from 'containers/Dashboard/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
+
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 import requireAuth from 'hoc/requireAuth';
 
@@ -32,6 +36,14 @@ import { getMe } from './actions';
 
 import './app.css';
 
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#2196f3',
+    },
+  },
+});
+
 class App extends Component {
   componentDidMount() {
     const { token, getMe } = this.props;
@@ -41,14 +53,14 @@ class App extends Component {
   }
   render() {
     return (
-      <div>
+      <MuiThemeProvider theme={theme}>
         <Switch>
           <Route exact path="/" component={LoginPage} />
           <Route path="/dashboard" component={requireAuth(Dashboard)} />
           <Route component={NotFoundPage} />
         </Switch>
         <ToastContainer />
-      </div>
+      </MuiThemeProvider>
     );
   }
 }

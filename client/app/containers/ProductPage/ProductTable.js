@@ -63,8 +63,8 @@ export default ({ products, onClick }) => (
         accessor: 'description',
       },
       {
-        Header: 'Price Capital',
-        accessor: 'price_capital',
+        Header: 'Capital Price',
+        accessor: 'capital_price',
         Cell: d => accounting.formatMoney(d.value, 'Rp. ', 2),
       },
       {

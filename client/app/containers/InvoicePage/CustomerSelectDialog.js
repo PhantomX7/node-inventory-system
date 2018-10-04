@@ -1,10 +1,14 @@
 import React from 'react';
+
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import ListItem from '@material-ui/core/ListItem';
+
+import ReactTable from 'react-table';
+import matchSorter from 'match-sorter';
 
 class ConfirmDialog extends React.Component {
   state = {
@@ -20,7 +24,7 @@ class ConfirmDialog extends React.Component {
   };
 
   render() {
-    const { title, content, noText, yesText, onYes } = this.props;
+    const { title, noText, onSelect, customers } = this.props;
     return (
       <div>
         {this.props.children(this.handleClickOpen)}
@@ -32,22 +36,38 @@ class ConfirmDialog extends React.Component {
         >
           <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
           <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              {content}
-            </DialogContentText>
+            <ReactTable
+              filterable
+              className="-striped -highlight select"
+              defaultFilterMethod={(filter, row) =>
+                String(row[filter.id]) === filter.value
+              }
+              data={customers}
+              columns={[
+                {
+                  Header: 'Name',
+                  accessor: 'name',
+                  Cell: props => (
+                    <ListItem
+                      button
+                      onClick={() => {
+                        this.handleClose();
+                        onSelect(props.original.id);
+                      }}
+                    >
+                      {props.value}
+                    </ListItem>
+                  ),
+                  filterMethod: (filter, rows) =>
+                    matchSorter(rows, filter.value, { keys: ['name'] }),
+                  filterAll: true,
+                },
+              ]}
+            />
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleClose} color="primary">
               {noText}
-            </Button>
-            <Button
-              onClick={() => {
-                this.handleClose();
-                onYes();
-              }}
-              color="secondary"
-            >
-              {yesText}
             </Button>
           </DialogActions>
         </Dialog>
@@ -57,9 +77,7 @@ class ConfirmDialog extends React.Component {
 }
 
 ConfirmDialog.defaultProps = {
-  onYes: () => {},
   noText: 'Cancel',
-  yesText: 'Ok',
 };
 
 export default ConfirmDialog;

@@ -3,7 +3,6 @@
  * ProductPage
  *
  */
-import 'react-table/react-table.css';
 
 import React from 'react';
 import { connect } from 'react-redux';
@@ -19,12 +18,12 @@ import Card from 'components/Card/Card';
 import CardHeader from 'components/Card/CardHeader';
 import CardBody from 'components/Card/CardBody';
 
-import injectReducer from 'utils/injectReducer';
+// import injectReducer from 'utils/injectReducer';
 import ProductTable from './ProductTable';
 import ProductAddModal from './ProductAddModal';
 import ProductEditModal from './ProductEditModal';
 
-import reducer from './reducer';
+// import reducer from './reducer';
 
 import { getProducts } from './actions';
 
@@ -119,9 +118,9 @@ const withConnect = connect(
   { getProducts },
 );
 
-const withReducer = injectReducer({ key: 'products', reducer });
+// const withReducer = injectReducer({ key: 'products', reducer });
 
 export default compose(
-  withReducer,
+  // withReducer,
   withConnect,
 )(ProductPage);

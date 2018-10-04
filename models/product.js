@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       unit: { type: DataTypes.STRING, allowNull: false },
       description: { type: DataTypes.STRING },
-      price_capital: {
+      capital_price: {
         type: DataTypes.DOUBLE,
         validate: { min: 0, isDecimal: true },
         allowNull: false

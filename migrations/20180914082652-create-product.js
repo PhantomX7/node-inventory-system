@@ -30,7 +30,7 @@ module.exports = {
       description: {
         type: Sequelize.STRING
       },
-      price_capital: {
+      capital_price: {
         type: Sequelize.DOUBLE,
         allowNull: false
       },

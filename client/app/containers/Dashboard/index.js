@@ -9,9 +9,11 @@ import { Helmet } from 'react-helmet';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
 // import SideNav from '../../components/SideNav';
-import DashboardMainPage from '../DashboardMainPage';
-import ProductPage from '../ProductPage';
-import CustomerPage from '../CustomerPage';
+import DashboardMainPage from 'containers/DashboardMainPage/Loadable';
+import ProductPage from 'containers/ProductPage/Loadable';
+import CustomerPage from 'containers/CustomerPage/Loadable';
+import InvoicePage from 'containers/InvoicePage/Loadable';
+import InvoiceDetailPage from 'containers/InvoiceDetailPage/Loadable';
 import Drawer from './Drawer';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -38,6 +40,12 @@ export class Dashboard extends Component {
             <Route path="/dashboard/main" exact component={DashboardMainPage} />
             <Route path="/dashboard/product" exact component={ProductPage} />
             <Route path="/dashboard/customer" exact component={CustomerPage} />
+            <Route path="/dashboard/invoice" exact component={InvoicePage} />
+            <Route
+              path="/dashboard/invoice/:id"
+              exact
+              component={InvoiceDetailPage}
+            />
           </Switch>
         </Drawer>
       </div>

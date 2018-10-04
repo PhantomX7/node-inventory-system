@@ -8,6 +8,7 @@ import {
 } from './material-dashboard-react';
 const cardHeaderStyle = {
   cardHeader: {
+    height: '57px',
     padding: '0.75rem 1.25rem',
     marginBottom: '0',
     borderBottom: 'none',
