@@ -49,6 +49,7 @@ export default ({ invoices, onClick }) => (
         filterMethod: (filter, rows) =>
           matchSorter(rows, filter.value, { keys: ['payment_status'] }),
         filterAll: true,
+        Cell: props => <div>{props.value ? 'Paid' : 'Not Paid'}</div>,
       },
       {
         Header: 'Payment Type',

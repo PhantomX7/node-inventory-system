@@ -61,19 +61,21 @@ export default ({ transactions = [], onEdit, onDelete }) => (
                   />
                 </Tooltip>
                 <Tooltip title="Delete" placement="bottom">
-                  <ConfirmDialog
-                    title="Are you sure?"
-                    content="this cannot be undone"
-                    onYes={() => onDelete(transaction.id)}
-                  >
-                    {handleClickOpen => (
-                      <ClearIcon
-                        style={{ fontSize: '16px' }}
-                        className="highlight"
-                        onClick={handleClickOpen}
-                      />
-                    )}
-                  </ConfirmDialog>
+                  <div>
+                    <ConfirmDialog
+                      title="Are you sure?"
+                      content="this cannot be undone"
+                      onYes={() => onDelete(transaction.id)}
+                    >
+                      {handleClickOpen => (
+                        <ClearIcon
+                          style={{ fontSize: '16px' }}
+                          className="highlight"
+                          onClick={handleClickOpen}
+                        />
+                      )}
+                    </ConfirmDialog>
+                  </div>
                 </Tooltip>
               </div>
             </TableCell>

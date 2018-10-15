@@ -22,6 +22,7 @@ import LoadingButton from 'components/LoadingButton';
 import ProductSelectDialog from './ProductSelectDialog';
 
 import { addTransaction } from './actions';
+import { getProducts } from '../ProductPage/actions';
 
 class TransactionAddModal extends Component {
   state = {
@@ -30,14 +31,21 @@ class TransactionAddModal extends Component {
   };
 
   handleFormSubmit = async values => {
-    const { invoiceId, addTransaction, onClose, reset } = this.props;
+    const {
+      invoiceId,
+      addTransaction,
+      getProducts,
+      onClose,
+      reset,
+    } = this.props;
     this.setState({ loading: true });
     try {
       await addTransaction({ ...values.toObject(), invoiceId }, () => {
+        this.setState({ loading: false, selectedProduct: null });
         onClose();
         reset();
-        this.setState({ loading: false, selectedProduct: null });
       });
+      await getProducts();
     } catch ({ response }) {
       this.setState({ loading: false });
       response.data.error.errors.forEach(error => {
@@ -254,10 +262,10 @@ const withForm = reduxForm({
 
 const withConnect = connect(
   mapStateToProps,
-  { addTransaction },
+  { addTransaction, getProducts },
 );
 
 export default compose(
-  withForm,
   withConnect,
+  withForm,
 )(TransactionAddModal);

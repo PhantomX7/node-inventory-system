@@ -17,6 +17,7 @@ import TextInput from 'components/TextInput';
 import LoadingButton from 'components/LoadingButton';
 
 import { editTransaction } from './actions';
+import { getProducts } from '../ProductPage/actions';
 
 class TransactionAddModal extends Component {
   state = {
@@ -30,6 +31,7 @@ class TransactionAddModal extends Component {
       onClose,
       reset,
       transaction,
+      getProducts,
     } = this.props;
     this.setState({ loading: true });
     try {
@@ -42,6 +44,7 @@ class TransactionAddModal extends Component {
           this.setState({ loading: false });
         },
       );
+      await getProducts();
     } catch ({ response }) {
       this.setState({ loading: false });
       response.data.error.errors.forEach(error => {
@@ -193,7 +196,7 @@ const withForm = reduxForm({
 
 const withConnect = connect(
   mapStateToProps,
-  { editTransaction },
+  { editTransaction, getProducts },
 );
 
 export default compose(

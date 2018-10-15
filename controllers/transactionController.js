@@ -7,54 +7,60 @@ const {
 } = require("../models");
 
 const addTransaction = async (req, res) => {
-  // try {
-  const { invoiceId, productId, capital_price, sell_price, amount } = req.body;
-  const total_sell_price = sell_price * amount;
-  const total_capital = capital_price * amount;
-  const profit = total_sell_price - total_capital;
-  let transaction;
-  await sequelize.transaction(async tx => {
-    const stockMutation = await StockMutation.create(
-      {
-        productId,
-        amount,
-        type: "OUT"
-      },
-      { transaction: tx }
-    );
-    const currentProduct = await Product.findById(productId);
-    const currentStock = currentProduct.stock;
-    await Product.update(
-      {
-        stock: currentStock - amount
-      },
-      { where: { id: productId }, transaction: tx }
-    );
-    const invoice = await Invoice.findById(invoiceId);
-    transaction = await Transaction.create(
-      {
-        invoiceId,
-        productId,
-        capital_price,
-        sell_price,
-        total_sell_price,
-        profit,
-        amount,
-        stockMutationId: stockMutation.id,
-        date: invoice.date
-      },
-      { transaction: tx }
-    );
-  });
-  await updateInvoice(invoiceId);
-  return res.status(200).json({
-    transaction
-  });
-  // } catch (err) {
-  //   return res.status(400).json({
-  //     error: err
-  //   });
-  // }
+  try {
+    const {
+      invoiceId,
+      productId,
+      capital_price,
+      sell_price,
+      amount
+    } = req.body;
+    const total_sell_price = sell_price * amount;
+    const total_capital = capital_price * amount;
+    const profit = total_sell_price - total_capital;
+    let transaction;
+    await sequelize.transaction(async tx => {
+      const stockMutation = await StockMutation.create(
+        {
+          productId,
+          amount,
+          type: "OUT"
+        },
+        { transaction: tx }
+      );
+      const currentProduct = await Product.findById(productId);
+      const currentStock = currentProduct.stock;
+      await Product.update(
+        {
+          stock: currentStock - amount
+        },
+        { where: { id: productId }, transaction: tx }
+      );
+      const invoice = await Invoice.findById(invoiceId);
+      transaction = await Transaction.create(
+        {
+          invoiceId,
+          productId,
+          capital_price,
+          sell_price,
+          total_sell_price,
+          profit,
+          amount,
+          stockMutationId: stockMutation.id,
+          date: invoice.date
+        },
+        { transaction: tx }
+      );
+    });
+    await updateInvoice(invoiceId);
+    return res.status(200).json({
+      transaction
+    });
+  } catch (err) {
+    return res.status(400).json({
+      error: err
+    });
+  }
 };
 
 const updateTransaction = async (req, res) => {
@@ -90,7 +96,7 @@ const updateTransaction = async (req, res) => {
 
       await Product.update(
         {
-          stock: currentStock + (amount - transaction.amount)
+          stock: currentStock + (transaction.amount - amount)
         },
         { where: { id: productId }, transaction: tx }
       );

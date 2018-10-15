@@ -25,6 +25,24 @@ async function fetchInvoice(dispatch, id) {
   dispatch({ type: GET_INVOICE, payload: data.invoice });
 }
 
+export function editInvoice(id, values, callback) {
+  return async dispatch => {
+    await axios.put(`${ROOT_URL}/api/invoice/${id}`, values, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+    });
+    fetchInvoice(dispatch, id);
+    callback();
+  };
+}
+
+export function deleteInvoice(id) {
+  return async () => {
+    await axios.delete(`${ROOT_URL}/api/invoice/${id}`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+    });
+  };
+}
+
 export function addTransaction(values, callback) {
   return async dispatch => {
     await axios.post(`${ROOT_URL}/api/transaction`, values, {
@@ -46,10 +64,10 @@ export function editTransaction(id, values, callback) {
 }
 
 export function deleteTransaction(id) {
-  return async dispatch => {
+  return async () => {
     await axios.delete(`${ROOT_URL}/api/transaction/${id}`, {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
     });
-    fetchInvoice(dispatch);
+    // fetchInvoice(dispatch);
   };
 }

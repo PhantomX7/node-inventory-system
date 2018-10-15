@@ -40,6 +40,7 @@ module.exports = (sequelize, DataTypes) => {
     Product.hasMany(models.StockAdjustment, { foreignKey: "productId" });
     Product.hasMany(models.StockMutation, { foreignKey: "productId" });
     Product.hasMany(models.Transaction, { foreignKey: "productId" });
+    Product.hasMany(models.OrderTransaction, { foreignKey: "productId" });
   };
   return Product;
 };

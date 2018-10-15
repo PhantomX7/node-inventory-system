@@ -15,13 +15,22 @@ const {
 const {
   getInvoices,
   addInvoice,
-  getInvoiceById
+  getInvoiceById,
+  updateInvoice,
+  deleteInvoice
 } = require("../controllers/invoiceController");
 const {
   addTransaction,
   updateTransaction,
   deleteTransaction
 } = require("../controllers/transactionController");
+const {
+  getOrderInvoices,
+  getOrderInvoiceById,
+  addOrderInvoice,
+  updateOrderInvoice,
+  deleteOrderInvoice
+} = require("../controllers/orderInvoiceController")
 const { getMe } = require("../controllers/authController");
 
 router.get("/me", getMe);
@@ -41,10 +50,20 @@ router.delete("/customer/:id", deleteCustomer);
 router.get("/invoice", getInvoices);
 router.post("/invoice", addInvoice);
 router.get("/invoice/:id", getInvoiceById);
+router.put("/invoice/:id", updateInvoice);
+router.delete("/invoice/:id", deleteInvoice);
 
 //transaction routes
 router.post("/transaction", addTransaction);
 router.put("/transaction/:id", updateTransaction);
 router.delete("/transaction/:id", deleteTransaction);
+
+//order invoice routes
+router.get('/orderinvoice',getOrderInvoices);
+router.post("/orderinvoice", addOrderInvoice);
+router.get("/orderinvoice/:id", getOrderInvoiceById);
+router.put("/orderinvoice/:id", updateOrderInvoice);
+router.delete("/orderinvoice/:id", deleteOrderInvoice);
+
 
 module.exports = router;

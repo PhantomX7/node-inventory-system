@@ -26,8 +26,9 @@ import reducer from './reducer';
 import TransactionTable from './TransactionTable';
 import TransactionAddModal from './TransactionAddModal';
 import TransactionEditModal from './TransactionEditModal';
+import InvoiceEditModal from './InvoiceEditModal';
 
-import { getInvoice } from './actions';
+import { getInvoice, deleteTransaction } from './actions';
 import { getProducts } from '../ProductPage/actions';
 
 import './invoiceDetailPage.scss';
@@ -37,13 +38,22 @@ export class InvoiceDetailPage extends React.Component {
   state = {
     modalAddTransactionVisible: false,
     modalEditTransactionVisible: false,
+    modalEditInvoiceVisible: false,
     editTransactionId: '',
   };
 
   getTransactionDetailById(id, transactions) {
+    if (!transactions) return {};
     const transaction = transactions.find(transaction => transaction.id === id);
     if (!transaction) return {};
     return { ...transaction, productName: transaction.Product.name };
+  }
+
+  async deleteTransaction(id) {
+    const { deleteTransaction, getInvoice, match, getProducts } = this.props;
+    await deleteTransaction(id);
+    await getInvoice(match.params.id);
+    await getProducts();
   }
 
   componentDidMount() {
@@ -58,12 +68,19 @@ export class InvoiceDetailPage extends React.Component {
     const {
       modalAddTransactionVisible,
       modalEditTransactionVisible,
+      modalEditInvoiceVisible,
       editTransactionId,
     } = this.state;
     if (!invoice) return <div>Loading...</div>;
     const { Customer, Transactions } = invoice;
     const { id } = this.props.match.params;
     const invoiceDetailMenus = [
+      {
+        name: 'Edit Invoice',
+        onClick: () => {
+          this.setState({ modalEditInvoiceVisible: true });
+        },
+      },
       {
         name: 'Add Transaction',
         onClick: () => {
@@ -97,28 +114,78 @@ export class InvoiceDetailPage extends React.Component {
               )}
               visible={modalEditTransactionVisible}
             />
+            <InvoiceEditModal
+              onClose={() => this.setState({ modalEditInvoiceVisible: false })}
+              invoice={{
+                ...invoice,
+                date: moment(invoice.date).format('YYYY-MM-DD'),
+                customerName: Customer.name,
+                payment_status: invoice.payment_status.toString(),
+              }}
+              visible={modalEditInvoiceVisible}
+            />
             <Card>
               <CardHeader color="primary">
                 <h4 className="m-0">Invoice Detail</h4>
               </CardHeader>
               <CardBody>
-                <div>Date : {moment(invoice.date).format('YYYY-MM-DD')}</div>
-                <div>Customer name : {Customer.name}</div>
-                <div>Payment status : {invoice.payment_status}</div>
-                <div>Payment type : {invoice.type}</div>
-                <div>Description : {invoice.description}</div>
-                <div>
-                  Total Capital :{' '}
-                  {accounting.formatMoney(invoice.total_capital, 'Rp. ', 2)}
-                </div>
-                <div>
-                  Total Sell Price :{' '}
-                  {accounting.formatMoney(invoice.total_sell_price, 'Rp. ', 2)}
-                </div>
-                <div>
-                  Total Profit :{' '}
-                  {accounting.formatMoney(invoice.total_profit, 'Rp. ', 2)}
-                </div>
+                <table>
+                  <tbody>
+                    <tr>
+                      <td>Date</td>
+                      <td>: {moment(invoice.date).format('YYYY-MM-DD')}</td>
+                    </tr>
+                    <tr>
+                      <td>Customer name</td>
+                      <td>: {Customer.name}</td>
+                    </tr>
+                    <tr>
+                      <td>Payment status</td>
+                      <td>: {invoice.payment_status ? 'Paid' : 'Not Paid'}</td>
+                    </tr>
+                    <tr>
+                      <td>Payment type</td>
+                      <td>: {invoice.payment_type}</td>
+                    </tr>
+                    <tr>
+                      <td>Description</td>
+                      <td>: {invoice.description}</td>
+                    </tr>
+                    <tr>
+                      <td>Total Capital</td>
+                      <td>
+                        :{' '}
+                        {accounting.formatMoney(
+                          invoice.total_capital,
+                          'Rp. ',
+                          2,
+                        )}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Total Sell Price</td>
+                      <td>
+                        :{' '}
+                        {accounting.formatMoney(
+                          invoice.total_sell_price,
+                          'Rp. ',
+                          2,
+                        )}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Total Profit</td>
+                      <td>
+                        :{' '}
+                        {accounting.formatMoney(
+                          invoice.total_profit,
+                          'Rp. ',
+                          2,
+                        )}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
                 <Menu menus={invoiceDetailMenus}>
                   {handleClick => (
                     <Button
@@ -138,6 +205,9 @@ export class InvoiceDetailPage extends React.Component {
                       modalEditTransactionVisible: true,
                     });
                   }}
+                  onDelete={id => {
+                    this.deleteTransaction(id);
+                  }}
                 />
               </CardBody>
             </Card>
@@ -155,7 +225,7 @@ const mapStateToProps = state => {
 
 const withConnect = connect(
   mapStateToProps,
-  { getInvoice, getProducts },
+  { getInvoice, getProducts, deleteTransaction },
 );
 
 const withReducer = injectReducer({ key: 'invoiceDetail', reducer });

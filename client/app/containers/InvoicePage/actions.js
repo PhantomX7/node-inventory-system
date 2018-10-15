@@ -11,17 +11,20 @@ if (process.env.NODE_ENV === 'development') {
   ROOT_URL = 'http://localhost:8000';
 }
 
-export function getInvoices() {
+export function getInvoices(start, end) {
   return async dispatch => {
-    fetchInvoices(dispatch);
+    fetchInvoices(dispatch, start, end);
   };
 }
 
-async function fetchInvoices(dispatch) {
+async function fetchInvoices(dispatch, start, end) {
   dispatch({ type: EMPTY_INVOICES });
-  const { data } = await axios.get(`${ROOT_URL}/api/invoice`, {
-    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-  });
+  const { data } = await axios.get(
+    `${ROOT_URL}/api/invoice?start=${start}&end=${end}`,
+    {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+    },
+  );
   dispatch({ type: GET_INVOICES, payload: data.invoices });
 }
 
@@ -30,7 +33,7 @@ export function addInvoice(values, callback) {
     await axios.post(`${ROOT_URL}/api/invoice`, values, {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
     });
-    fetchInvoices(dispatch);
+    fetchInvoices(dispatch, values.date, values.date);
     callback();
   };
 }
