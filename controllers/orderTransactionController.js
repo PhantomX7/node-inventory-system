@@ -53,6 +53,100 @@ const addOrderTransaction = async (req, res) => {
   }
 };
 
+const updateOrderTransaction = async (req, res) => {
+  try {
+    const orderTransactionId = req.params.id;
+    const { buy_price, amount } = req.body;
+    let orderTransaction = await OrderTransaction.findById(orderTransactionId);
+    let { orderInvoiceId, productId } = orderTransaction;
+
+    await sequelize.transaction(async tx => {
+      //delete previous data
+
+      await StockMutation.destroy({
+        where: { id: orderTransaction.stockMutationId },
+        transaction: tx
+      });
+
+      //save new record
+      const total_buy_price = buy_price * amount;
+
+      const stockMutation = await StockMutation.create(
+        {
+          productId,
+          amount,
+          type: "IN"
+        },
+        { transaction: tx }
+      );
+      currentProduct = await Product.findById(productId);
+      currentStock = currentProduct.stock;
+
+      await Product.update(
+        {
+          stock: currentStock - parseInt(orderTransaction.amount - amount)
+        },
+        { where: { id: productId }, transaction: tx }
+      );
+
+      orderTransaction = await OrderTransaction.update(
+        {
+          buy_price,
+          total_buy_price,
+          amount,
+          stockMutationId: stockMutation.id
+        },
+        { where: { id: orderTransactionId }, transaction: tx }
+      );
+    });
+    await updateOrderInvoice(orderInvoiceId);
+    return res.status(200).json({
+      orderTransaction
+    });
+  } catch (err) {
+    return res.status(400).json({
+      error: err
+    });
+  }
+};
+
+const deleteOrderTransaction = async (req, res) => {
+  try {
+    const orderTransactionId = req.params.id;
+    const orderTransaction = await OrderTransaction.findById(
+      orderTransactionId
+    );
+    await sequelize.transaction(async tx => {
+      await StockMutation.destroy({
+        where: { id: orderTransaction.stockMutationId },
+        transaction: tx
+      });
+
+      const currentProduct = await Product.findById(orderTransaction.productId);
+      const currentStock = currentProduct.stock;
+      await Product.update(
+        {
+          stock: currentStock - orderTransaction.amount
+        },
+        { where: { id: orderTransaction.productId }, transaction: tx }
+      );
+
+      const deletedOrderTransaction = await OrderTransaction.destroy({
+        where: { id: orderTransactionId },
+        transaction: tx
+      });
+    });
+    await updateOrderInvoice(orderTransaction.orderInvoiceId);
+    return res.status(200).json({
+      orderTransaction
+    });
+  } catch (err) {
+    return res.status(400).json({
+      error: err
+    });
+  }
+};
+
 const updateOrderInvoice = async orderInvoiceId => {
   await sequelize.transaction(async tx => {
     const orderInvoice = await OrderInvoice.findOne({
@@ -73,4 +167,8 @@ const updateOrderInvoice = async orderInvoiceId => {
   });
 };
 
-module.exports = { addOrderTransaction };
+module.exports = {
+  addOrderTransaction,
+  updateOrderTransaction,
+  deleteOrderTransaction
+};

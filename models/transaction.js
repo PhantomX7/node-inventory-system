@@ -38,6 +38,7 @@ module.exports = (sequelize, DataTypes) => {
     Transaction.belongsTo(models.StockMutation, {
       foreignKey: "stockMutationId"
     });
+    Transaction.hasOne(models.ReturnTransaction, { foreignKey: "transactionId" });
   };
   return Transaction;
 };

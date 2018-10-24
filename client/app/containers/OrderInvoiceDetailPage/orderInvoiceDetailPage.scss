@@ -1,0 +1,35 @@
+div.select div div div div.rt-td {
+  padding: 0 !important;
+}
+
+.deleteButton {
+  background-color: #ff1744;
+  flex: 1 1 auto;
+  min-width: 150px;
+  padding: 8px;
+  border: 0px solid #f7f7f7;
+  text-align: center;
+  text-transform: uppercase;
+  position: relative;
+  overflow:hidden;
+  transition: .3s;
+  border-radius: 10px;
+  color: white;
+  &:after {
+    position: absolute;
+    transition: .3s;
+    content: '';
+    width: 0;
+    left: 50%;
+    bottom: 0;
+    height: 3px;
+    background: #f7f7f7;
+  }
+  &:hover {
+    cursor: pointer;
+    &:after {
+      width: 100%;
+      left: 0;
+    }
+  }
+}

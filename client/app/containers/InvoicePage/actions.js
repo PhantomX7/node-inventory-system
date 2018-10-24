@@ -17,6 +17,12 @@ export function getInvoices(start, end) {
   };
 }
 
+export function emptyInvoices() {
+  return dispatch => {
+    dispatch({ type: EMPTY_INVOICES });
+  };
+}
+
 async function fetchInvoices(dispatch, start, end) {
   dispatch({ type: EMPTY_INVOICES });
   const { data } = await axios.get(
@@ -37,22 +43,3 @@ export function addInvoice(values, callback) {
     callback();
   };
 }
-
-// export function editInvoice(id, values, callback) {
-//   return async dispatch => {
-//     await axios.put(`${ROOT_URL}/api/customer/${id}`, values, {
-//       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-//     });
-//     fetchInvoices(dispatch);
-//     callback();
-//   };
-// }
-//
-// export function deleteInvoice(id) {
-//   return async dispatch => {
-//     await axios.delete(`${ROOT_URL}/api/customer/${id}`, {
-//       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-//     });
-//     fetchInvoices(dispatch);
-//   };
-// }

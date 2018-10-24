@@ -16,28 +16,28 @@ import TextField from '@material-ui/core/TextField';
 import TextInput from 'components/TextInput';
 import LoadingButton from 'components/LoadingButton';
 
-import { editTransaction } from './actions';
+import { editOrderTransaction } from './actions';
 import { getProducts } from '../ProductPage/actions';
 
-class TransactionAddModal extends Component {
+class OrderTransactionAddModal extends Component {
   state = {
     loading: false,
   };
 
   handleFormSubmit = async values => {
     const {
-      invoiceId,
-      editTransaction,
+      orderInvoiceId,
+      editOrderTransaction,
       onClose,
       reset,
-      transaction,
+      orderTransaction,
       getProducts,
     } = this.props;
     this.setState({ loading: true });
     try {
-      await editTransaction(
-        transaction.id,
-        { ...values.toObject(), invoiceId },
+      await editOrderTransaction(
+        orderTransaction.id,
+        { ...values.toObject(), orderInvoiceId },
         () => {
           onClose();
           reset();
@@ -60,7 +60,7 @@ class TransactionAddModal extends Component {
       <section>
         <Modal visible={visible} width="60%" height="80%" effect="fadeInUp">
           <div className="d-flex justify-content-between">
-            <h2 className="pl-5 pt-3">Edit Transaction</h2>
+            <h2 className="pl-5 pt-3">Edit Order Transaction</h2>
             <Button color="secondary" onClick={() => onClose()}>
               <ClearIcon />
             </Button>
@@ -71,7 +71,7 @@ class TransactionAddModal extends Component {
             style={{ overflowY: 'scroll', height: '80%', padding: '0 3%' }}
           >
             <form
-              className="add-invoice-form"
+              className="edit-order-transaction-form"
               onSubmit={handleSubmit(this.handleFormSubmit)}
             >
               <Field
@@ -87,26 +87,10 @@ class TransactionAddModal extends Component {
                 }}
               />
               <Field
-                name="capital_price"
+                name="buy_price"
                 component={TextInput}
-                label={`Price Capital : ${accounting.formatMoney(
-                  formStates && formStates.get('capital_price'),
-                  'Rp. ',
-                  2,
-                )}`}
-                type="text"
-                InputProps={{
-                  readOnly: true,
-                }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-              <Field
-                name="sell_price"
-                component={TextInput}
-                label={`Sell Price : ${accounting.formatMoney(
-                  formStates && formStates.get('sell_price'),
+                label={`Buy Price : ${accounting.formatMoney(
+                  formStates && formStates.get('buy_price'),
                   'Rp. ',
                   2,
                 )}`}
@@ -125,13 +109,13 @@ class TransactionAddModal extends Component {
                 }}
               />
               <TextField
-                name="total_sell_price"
-                label="Total Sell Price"
+                name="total_buy_price"
+                label="Total Buy Price"
                 color="primary"
                 type="text"
                 value={`${accounting.formatMoney(
                   formStates &&
-                    formStates.get('sell_price') * formStates.get('amount'),
+                    formStates.get('buy_price') * formStates.get('amount'),
                   'Rp. ',
                   2,
                 )}`}
@@ -146,7 +130,7 @@ class TransactionAddModal extends Component {
               <br />
               <br />
               <LoadingButton
-                name="Edit Transaction"
+                name="Edit Order Transaction"
                 isLoading={this.state.loading}
               />
             </form>
@@ -158,19 +142,16 @@ class TransactionAddModal extends Component {
 }
 
 function validate(values) {
-  const { sell_price, amount, stock } = values.toObject();
+  const { buy_price, amount } = values.toObject();
   const errors = {};
-  if (!sell_price) {
-    errors.sell_price = 'Please enter a sell price';
+  if (!buy_price) {
+    errors.sell_price = 'Please enter a buy price';
   }
-  if (sell_price && sell_price <= 0) {
-    errors.sell_price = 'Please enter a valid sell price';
+  if (buy_price && buy_price <= 0) {
+    errors.sell_price = 'Please enter a valid buy price';
   }
   if (!amount) {
     errors.amount = 'Please enter an amount of product';
-  }
-  if (amount && stock - amount < 0) {
-    errors.amount = 'Not enough stock';
   }
   if (amount && amount < 0) {
     errors.amount = 'Please enter an valid amount of product';
@@ -182,22 +163,22 @@ function validate(values) {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  formStates: getFormValues('edittransaction')(state),
-  initialValues: ownProps.transaction,
+  formStates: getFormValues('editordertransaction')(state),
+  initialValues: ownProps.orderTransaction,
 });
 
 const withForm = reduxForm({
-  form: 'edittransaction',
+  form: 'editordertransaction',
   enableReinitialize: true,
   validate,
 });
 
 const withConnect = connect(
   mapStateToProps,
-  { editTransaction, getProducts },
+  { editOrderTransaction, getProducts },
 );
 
 export default compose(
   withConnect,
   withForm,
-)(TransactionAddModal);
+)(OrderTransactionAddModal);

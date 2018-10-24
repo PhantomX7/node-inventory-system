@@ -1,6 +1,6 @@
 /**
  *
- * InvoicePage
+ * OrderInvoicePage
  *
  */
 
@@ -22,35 +22,32 @@ import CardBody from 'components/Card/CardBody';
 import LoadingButton from 'components/LoadingButton';
 
 import injectReducer from 'utils/injectReducer';
-import InvoiceTable from './InvoiceTable';
-import InvoiceAddModal from './InvoiceAddModal';
-
+import OrderInvoiceTable from './OrderInvoiceTable';
+import OrderInvoiceAddModal from './OrderInvoiceAddModal';
 import reducer from './reducer';
 
-import { getInvoices, emptyInvoices } from './actions';
-import { getCustomers } from '../CustomerPage/actions';
+import { getOrderInvoices, emptyOrderInvoices } from './actions';
 
-import './invoicePage.scss';
+import './orderInvoicePage.scss';
 
 /* eslint-disable react/prefer-stateless-function */
-export class InvoicePage extends React.Component {
+export class OrderInvoicePage extends React.Component {
   state = {
-    modalAddInvoiceVisible: false,
+    modalAddOrderInvoiceVisible: false,
     loading: false,
   };
 
   componentDidMount() {
-    const { getCustomers, emptyInvoices } = this.props;
-    getCustomers();
-    emptyInvoices();
+    const { emptyOrderInvoices } = this.props;
+    emptyOrderInvoices();
   }
 
   handleFormSubmit = async values => {
-    const { getInvoices } = this.props;
+    const { getOrderInvoices } = this.props;
     const { start, end } = values.toObject();
     this.setState({ loading: true });
     try {
-      await getInvoices(start, end);
+      await getOrderInvoices(start, end);
       this.setState({ loading: false });
     } catch ({ response }) {
       this.setState({ loading: false });
@@ -58,35 +55,37 @@ export class InvoicePage extends React.Component {
   };
 
   render() {
-    const { modalAddInvoiceVisible } = this.state;
-    const { invoices, history, handleSubmit } = this.props;
+    const { modalAddOrderInvoiceVisible } = this.state;
+    const { orderInvoices, history, handleSubmit } = this.props;
     const invoiceMenus = [
       {
-        name: 'Add Invoice',
+        name: 'Add Order',
         onClick: () => {
-          this.setState({ modalAddInvoiceVisible: true });
+          this.setState({ modalAddOrderInvoiceVisible: true });
         },
       },
     ];
     return (
       <div>
         <Helmet>
-          <title>Invoice</title>
-          <meta name="description" content="Description of InvoicePage" />
+          <title>OrderInvoicePage</title>
+          <meta name="description" content="Description of OrderInvoicePage" />
         </Helmet>
         <GridContainer>
           <GridItem xs={12} sm={12} md={12}>
-            <InvoiceAddModal
-              onClose={() => this.setState({ modalAddInvoiceVisible: false })}
-              visible={modalAddInvoiceVisible}
+            <OrderInvoiceAddModal
+              onClose={() =>
+                this.setState({ modalAddOrderInvoiceVisible: false })
+              }
+              visible={modalAddOrderInvoiceVisible}
             />
             <Card>
               <CardHeader color="primary">
-                <h4 className="m-0">Invoice</h4>
+                <h4 className="m-0">Order Invoice</h4>
               </CardHeader>
               <CardBody>
                 <form
-                  className="add-invoice-form mb-3"
+                  className="add-order-invoice-form mb-3"
                   onSubmit={handleSubmit(this.handleFormSubmit)}
                 >
                   <GridContainer>
@@ -114,7 +113,7 @@ export class InvoicePage extends React.Component {
                     </GridItem>
                   </GridContainer>
                   <LoadingButton
-                    name="Get Invoices"
+                    name="Get Orders"
                     isLoading={this.state.loading}
                   />
                 </form>
@@ -125,14 +124,14 @@ export class InvoicePage extends React.Component {
                       onClick={handleClick}
                       className="mb-3"
                     >
-                      Invoice Menu
+                      Order Invoice Menu
                     </Button>
                   )}
                 </Menu>
-                <InvoiceTable
-                  invoices={invoices}
+                <OrderInvoiceTable
+                  orderInvoices={orderInvoices}
                   onClick={id => {
-                    history.push(`/dashboard/invoice/${id}`);
+                    history.push(`/dashboard/orderinvoice/${id}`);
                   }}
                 />
               </CardBody>
@@ -159,25 +158,24 @@ function validate(values) {
 }
 
 const mapStateToProps = state => {
-  const invoices = state.get('invoices');
-  const customers = state.get('customers');
-  return { invoices, customers };
+  const orderInvoices = state.get('orderInvoices');
+  return { orderInvoices };
 };
 
 const withConnect = connect(
   mapStateToProps,
-  { getInvoices, emptyInvoices, getCustomers },
+  { getOrderInvoices, emptyOrderInvoices },
 );
 
 const withForm = reduxForm({
-  form: 'getinvoice',
+  form: 'getorderinvoice',
   validate,
 });
 
-const withReducer = injectReducer({ key: 'invoices', reducer });
+const withReducer = injectReducer({ key: 'orderInvoices', reducer });
 
 export default compose(
   withReducer,
   withConnect,
   withForm,
-)(InvoicePage);
+)(OrderInvoicePage);

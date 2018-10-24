@@ -14,6 +14,9 @@ import ProductPage from 'containers/ProductPage/Loadable';
 import CustomerPage from 'containers/CustomerPage/Loadable';
 import InvoicePage from 'containers/InvoicePage/Loadable';
 import InvoiceDetailPage from 'containers/InvoiceDetailPage/Loadable';
+import OrderInvoicePage from 'containers/OrderInvoicePage/Loadable';
+import OrderInvoiceDetailPage from 'containers/OrderInvoiceDetailPage/Loadable';
+
 import Drawer from './Drawer';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -45,6 +48,16 @@ export class Dashboard extends Component {
               path="/dashboard/invoice/:id"
               exact
               component={InvoiceDetailPage}
+            />
+            <Route
+              path="/dashboard/orderinvoice"
+              exact
+              component={OrderInvoicePage}
+            />
+            <Route
+              path="/dashboard/orderinvoice/:id"
+              exact
+              component={OrderInvoiceDetailPage}
             />
           </Switch>
         </Drawer>

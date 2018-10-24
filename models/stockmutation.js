@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     StockMutation.belongsTo(models.Product, { foreignKey: "productId" });
     StockMutation.hasOne(models.Transaction, { foreignKey: "stockMutationId" });
+    StockMutation.hasOne(models.ReturnTransaction, { foreignKey: "stockMutationId" });
     StockMutation.hasOne(models.OrderTransaction, { foreignKey: "stockMutationId" });
   };
   

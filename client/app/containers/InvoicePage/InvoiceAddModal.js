@@ -169,13 +169,16 @@ class InvoiceAddModal extends Component {
 }
 
 function validate(values) {
-  const { customerId, date, payment_status } = values.toObject();
+  const { customerId, date, payment_status, payment_type } = values.toObject();
   const errors = {};
   if (!customerId) {
     errors.customerId = 'Please select a customer';
   }
   if (!payment_status) {
     errors.payment_status = 'Please select a payment status';
+  }
+  if (!payment_type) {
+    errors.payment_type = 'Please enter a payment type';
   }
   if (!date) {
     errors.date = 'Please enter a date';

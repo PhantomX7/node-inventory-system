@@ -68,6 +68,5 @@ export function deleteTransaction(id) {
     await axios.delete(`${ROOT_URL}/api/transaction/${id}`, {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
     });
-    // fetchInvoice(dispatch);
   };
 }

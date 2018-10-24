@@ -32,7 +32,9 @@ const {
   deleteOrderInvoice
 } = require("../controllers/orderInvoiceController");
 const {
-  addOrderTransaction
+  addOrderTransaction,
+  updateOrderTransaction,
+  deleteOrderTransaction
 } = require("../controllers/orderTransactionController");
 const { getMe } = require("../controllers/authController");
 
@@ -70,5 +72,11 @@ router.delete("/orderinvoice/:id", deleteOrderInvoice);
 
 //order transaction routes
 router.post("/ordertransaction", addOrderTransaction);
+router.put("/ordertransaction/:id", updateOrderTransaction);
+router.delete("/ordertransaction/:id", deleteOrderTransaction);
+
+router.get("/celine", (req, res) => {
+  res.send("hello world");
+});
 
 module.exports = router;

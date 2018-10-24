@@ -8,39 +8,43 @@ import {
   reduxForm,
   getFormValues,
   SubmissionError,
+  change,
 } from 'redux-form/immutable';
 import accounting from 'accounting';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import { Clear as ClearIcon } from '@material-ui/icons';
+import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
 import TextField from '@material-ui/core/TextField';
 
 import TextInput from 'components/TextInput';
 import LoadingButton from 'components/LoadingButton';
+import ProductSelectDialog from './ProductSelectDialog';
 
-import { editTransaction } from './actions';
+import { addOrderTransaction } from './actions';
 import { getProducts } from '../ProductPage/actions';
 
-class TransactionAddModal extends Component {
+class OrderTransactionAddModal extends Component {
   state = {
     loading: false,
+    selectedProduct: null,
   };
 
   handleFormSubmit = async values => {
     const {
-      invoiceId,
-      editTransaction,
+      orderInvoiceId,
+      addOrderTransaction,
+      getProducts,
       onClose,
       reset,
-      transaction,
-      getProducts,
     } = this.props;
     this.setState({ loading: true });
     try {
-      await editTransaction(
-        transaction.id,
-        { ...values.toObject(), invoiceId },
+      await addOrderTransaction(
+        { ...values.toObject(), orderInvoiceId },
         () => {
-          onClose();
           reset();
+          onClose();
         },
       );
       await getProducts();
@@ -54,13 +58,30 @@ class TransactionAddModal extends Component {
     }
   };
 
+  setSelectedProduct(id) {
+    const { products, dispatch } = this.props;
+    if (!products || !id) return;
+    const product = products.find(product => product.id === id);
+    this.setState({ selectedProduct: product });
+    dispatch(change('addordertransaction', 'productId', id));
+    dispatch(change('addordertransaction', 'stock', product.stock));
+  }
+
   render() {
-    const { visible, onClose, handleSubmit, formStates } = this.props;
+    const {
+      visible,
+      onClose,
+      handleSubmit,
+      products,
+      formStates,
+      // dispatch,
+    } = this.props;
+    const { selectedProduct } = this.state;
     return (
       <section>
         <Modal visible={visible} width="60%" height="80%" effect="fadeInUp">
           <div className="d-flex justify-content-between">
-            <h2 className="pl-5 pt-3">Edit Transaction</h2>
+            <h2 className="pl-5 pt-3">Add Transaction</h2>
             <Button color="secondary" onClick={() => onClose()}>
               <ClearIcon />
             </Button>
@@ -75,10 +96,41 @@ class TransactionAddModal extends Component {
               onSubmit={handleSubmit(this.handleFormSubmit)}
             >
               <Field
+                name="productId"
+                component={TextInput}
+                label="Product Id"
+                type="text"
+                InputProps={{
+                  readOnly: true,
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <ProductSelectDialog
+                        title="Please select a Product"
+                        products={products}
+                        onSelect={id => {
+                          this.setSelectedProduct(id);
+                        }}
+                      >
+                        {handleClickOpen => (
+                          <IconButton onClick={handleClickOpen}>
+                            <EditIcon />
+                          </IconButton>
+                        )}
+                      </ProductSelectDialog>
+                    </InputAdornment>
+                  ),
+                }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+              <TextField
                 name="productName"
-                component={TextInput}
                 label="Product Name"
+                color="primary"
                 type="text"
+                value={(selectedProduct && selectedProduct.name) || ''}
+                fullWidth
                 InputProps={{
                   readOnly: true,
                 }}
@@ -87,26 +139,10 @@ class TransactionAddModal extends Component {
                 }}
               />
               <Field
-                name="capital_price"
+                name="buy_price"
                 component={TextInput}
-                label={`Price Capital : ${accounting.formatMoney(
-                  formStates && formStates.get('capital_price'),
-                  'Rp. ',
-                  2,
-                )}`}
-                type="text"
-                InputProps={{
-                  readOnly: true,
-                }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-              <Field
-                name="sell_price"
-                component={TextInput}
-                label={`Sell Price : ${accounting.formatMoney(
-                  formStates && formStates.get('sell_price'),
+                label={`Buy Price : ${accounting.formatMoney(
+                  formStates && formStates.get('buy_price'),
                   'Rp. ',
                   2,
                 )}`}
@@ -118,20 +154,21 @@ class TransactionAddModal extends Component {
               <Field
                 name="amount"
                 component={TextInput}
-                label="Amount"
+                label={`Amount - stock: ${formStates &&
+                  formStates.get('stock')}`}
                 type="number"
                 InputLabelProps={{
                   shrink: true,
                 }}
               />
               <TextField
-                name="total_sell_price"
-                label="Total Sell Price"
+                name="total_buy_price"
+                label="Total Buy Price"
                 color="primary"
                 type="text"
                 value={`${accounting.formatMoney(
                   formStates &&
-                    formStates.get('sell_price') * formStates.get('amount'),
+                    formStates.get('buy_price') * formStates.get('amount'),
                   'Rp. ',
                   2,
                 )}`}
@@ -146,7 +183,7 @@ class TransactionAddModal extends Component {
               <br />
               <br />
               <LoadingButton
-                name="Edit Transaction"
+                name="Add Order Transaction"
                 isLoading={this.state.loading}
               />
             </form>
@@ -158,19 +195,19 @@ class TransactionAddModal extends Component {
 }
 
 function validate(values) {
-  const { sell_price, amount, stock } = values.toObject();
+  const { productId, buy_price, amount } = values.toObject();
   const errors = {};
-  if (!sell_price) {
-    errors.sell_price = 'Please enter a sell price';
+  if (!productId) {
+    errors.productId = 'Please select a product';
   }
-  if (sell_price && sell_price <= 0) {
-    errors.sell_price = 'Please enter a valid sell price';
+  if (!buy_price) {
+    errors.buy_price = 'Please enter a buy price';
+  }
+  if (buy_price && buy_price <= 0) {
+    errors.buy_price = 'Please enter a valid buy price';
   }
   if (!amount) {
     errors.amount = 'Please enter an amount of product';
-  }
-  if (amount && stock - amount < 0) {
-    errors.amount = 'Not enough stock';
   }
   if (amount && amount < 0) {
     errors.amount = 'Please enter an valid amount of product';
@@ -181,23 +218,25 @@ function validate(values) {
   return errors;
 }
 
-const mapStateToProps = (state, ownProps) => ({
-  formStates: getFormValues('edittransaction')(state),
-  initialValues: ownProps.transaction,
-});
+const mapStateToProps = state => {
+  const products = state.get('products');
+  return {
+    products,
+    formStates: getFormValues('addordertransaction')(state),
+  };
+};
 
 const withForm = reduxForm({
-  form: 'edittransaction',
-  enableReinitialize: true,
+  form: 'addordertransaction',
   validate,
 });
 
 const withConnect = connect(
   mapStateToProps,
-  { editTransaction, getProducts },
+  { addOrderTransaction, getProducts },
 );
 
 export default compose(
   withConnect,
   withForm,
-)(TransactionAddModal);
+)(OrderTransactionAddModal);

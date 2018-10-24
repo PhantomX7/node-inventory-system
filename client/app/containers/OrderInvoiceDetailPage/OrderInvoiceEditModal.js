@@ -20,7 +20,7 @@ import ConfirmDialog from 'components/ConfirmDialog';
 
 import { triggerError } from 'utils/toast';
 
-import { editInvoice, deleteInvoice } from './actions';
+import { editOrderInvoice, deleteOrderInvoice } from './actions';
 
 class InvoiceEditModal extends Component {
   state = {
@@ -28,10 +28,10 @@ class InvoiceEditModal extends Component {
   };
 
   handleFormSubmit = async values => {
-    const { editInvoice, onClose, reset, invoice } = this.props;
+    const { editOrderInvoice, onClose, reset, orderInvoice } = this.props;
     this.setState({ loading: true });
     try {
-      await editInvoice(invoice.id, values.toObject(), () => {
+      await editOrderInvoice(orderInvoice.id, values.toObject(), () => {
         reset();
         onClose();
       });
@@ -46,18 +46,18 @@ class InvoiceEditModal extends Component {
   };
 
   handleDelete = async () => {
-    const { deleteInvoice, invoice, history } = this.props;
+    const { deleteOrderInvoice, orderInvoice, history } = this.props;
     this.setState({ loading: true });
-    const { Transactions } = invoice;
-    if (Transactions.length > 0) {
+    const { OrderTransactions } = orderInvoice;
+    if (OrderTransactions.length > 0) {
       triggerError(
-        'Please delete all transaction before deleting this invoice',
+        'Please delete all order transaction before deleting this invoice',
       );
       this.setState({ loading: false });
       return;
     }
-    await deleteInvoice(invoice.id);
-    history.push('/dashboard/invoice');
+    await deleteOrderInvoice(orderInvoice.id);
+    history.push('/dashboard/orderinvoice');
   };
 
   render() {
@@ -66,7 +66,7 @@ class InvoiceEditModal extends Component {
       <section>
         <Modal visible={visible} width="60%" height="80%" effect="fadeInUp">
           <div className="d-flex justify-content-between">
-            <h2 className="pl-5 pt-3">Edit Invoice</h2>
+            <h2 className="pl-5 pt-3">Edit Order Invoice</h2>
             <Button color="secondary" onClick={() => onClose()}>
               <ClearIcon />
             </Button>
@@ -74,21 +74,9 @@ class InvoiceEditModal extends Component {
           <hr className="m-0" />
           <div className="m-4" style={{ height: '80%', padding: '0 3%' }}>
             <form
-              className="edit-invoice-form"
+              className="edit-order-invoice-form"
               onSubmit={handleSubmit(this.handleFormSubmit)}
             >
-              <Field
-                name="customerName"
-                component={TextInput}
-                label="Customer Name"
-                type="text"
-                InputProps={{
-                  readOnly: true,
-                }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
               <Field
                 name="payment_status"
                 component={SelectInput}
@@ -98,12 +86,6 @@ class InvoiceEditModal extends Component {
                 <MenuItem value="true">Paid</MenuItem>
               </Field>
               <Field
-                name="payment_type"
-                component={TextInput}
-                label="Payment Type"
-                type="text"
-              />
-              <Field
                 name="description"
                 component={TextInput}
                 label="Description"
@@ -112,7 +94,7 @@ class InvoiceEditModal extends Component {
               <Field
                 name="date"
                 component={TextInput}
-                label="Invoice Date"
+                label="Order Invoice Date"
                 type="date"
                 InputLabelProps={{
                   shrink: true,
@@ -120,7 +102,7 @@ class InvoiceEditModal extends Component {
               />
               <div className="d-flex justify-content-between">
                 <LoadingButton
-                  name="Edit Invoice"
+                  name="Edit Order Invoice"
                   isLoading={this.state.loading}
                 />
                 <ConfirmDialog
@@ -162,19 +144,19 @@ function validate(values) {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  formStates: getFormValues('editinvoice')(state),
-  initialValues: ownProps.invoice,
+  formStates: getFormValues('editorderinvoice')(state),
+  initialValues: ownProps.orderInvoice,
 });
 
 const withForm = reduxForm({
-  form: 'editinvoice',
+  form: 'editorderinvoice',
   enableReinitialize: true,
   validate,
 });
 
 const withConnect = connect(
   mapStateToProps,
-  { editInvoice, deleteInvoice },
+  { editOrderInvoice, deleteOrderInvoice },
 );
 
 export default compose(
