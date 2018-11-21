@@ -27,8 +27,8 @@ export default ChildComponent => {
   }
 
   function mapStateToProps(state) {
-    const { user } = state.get('auth');
-    return { auth: user };
+    const { token } = state.get('auth');
+    return { auth: token };
   }
 
   const withConnect = connect(mapStateToProps);

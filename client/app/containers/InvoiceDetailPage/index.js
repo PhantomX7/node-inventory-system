@@ -26,9 +26,15 @@ import reducer from './reducer';
 import TransactionTable from './TransactionTable';
 import TransactionAddModal from './TransactionAddModal';
 import TransactionEditModal from './TransactionEditModal';
+import ReturnTransactionAddModal from './ReturnTransactionAddModal';
+import ReturnTransactionEditModal from './ReturnTransactionEditModal';
 import InvoiceEditModal from './InvoiceEditModal';
 
-import { getInvoice, deleteTransaction } from './actions';
+import {
+  getInvoice,
+  deleteTransaction,
+  deleteReturnTransaction,
+} from './actions';
 import { getProducts } from '../ProductPage/actions';
 
 import './invoiceDetailPage.scss';
@@ -37,9 +43,12 @@ import './invoiceDetailPage.scss';
 export class InvoiceDetailPage extends React.Component {
   state = {
     modalAddTransactionVisible: false,
+    modalAddReturnTransactionVisible: false,
     modalEditTransactionVisible: false,
+    modalEditReturnTransactionVisible: false,
     modalEditInvoiceVisible: false,
     editTransactionId: '',
+    editReturnTransactionId: '',
   };
 
   getTransactionDetailById(id, transactions) {
@@ -49,11 +58,29 @@ export class InvoiceDetailPage extends React.Component {
     return { ...transaction, productName: transaction.Product.name };
   }
 
+  getReturnTransactionDetailById(id, transactions) {
+    if (!transactions || !id) return {};
+    const transaction = transactions.find(
+      transaction => transaction.ReturnTransaction.id === id,
+    );
+    if (!transaction) return {};
+    return {
+      ...transaction.ReturnTransaction,
+      transactionAmount: transaction.amount,
+    };
+  }
+
   async deleteTransaction(id) {
     const { deleteTransaction, getInvoice, match, getProducts } = this.props;
     await deleteTransaction(id);
     await getInvoice(match.params.id);
     await getProducts();
+  }
+
+  async deleteReturnTransaction(id) {
+    const { deleteReturnTransaction, getInvoice, match } = this.props;
+    await deleteReturnTransaction(id);
+    await getInvoice(match.params.id);
   }
 
   componentDidMount() {
@@ -69,7 +96,10 @@ export class InvoiceDetailPage extends React.Component {
       modalAddTransactionVisible,
       modalEditTransactionVisible,
       modalEditInvoiceVisible,
+      modalAddReturnTransactionVisible,
+      modalEditReturnTransactionVisible,
       editTransactionId,
+      editReturnTransactionId,
     } = this.state;
     if (!invoice) return <div>Loading...</div>;
     const { Customer, Transactions } = invoice;
@@ -87,6 +117,12 @@ export class InvoiceDetailPage extends React.Component {
           this.setState({ modalAddTransactionVisible: true });
         },
       },
+      {
+        name: 'Add Return Transaction',
+        onClick: () => {
+          this.setState({ modalAddReturnTransactionVisible: true });
+        },
+      },
     ];
     return (
       <div>
@@ -96,6 +132,25 @@ export class InvoiceDetailPage extends React.Component {
         </Helmet>
         <GridContainer>
           <GridItem xs={12} sm={12} md={12}>
+            <ReturnTransactionAddModal
+              onClose={() =>
+                this.setState({ modalAddReturnTransactionVisible: false })
+              }
+              invoiceId={id}
+              transactions={Transactions}
+              visible={modalAddReturnTransactionVisible}
+            />
+            <ReturnTransactionEditModal
+              onClose={() =>
+                this.setState({ modalEditReturnTransactionVisible: false })
+              }
+              invoiceId={id}
+              returnTransaction={this.getReturnTransactionDetailById(
+                editReturnTransactionId,
+                Transactions,
+              )}
+              visible={modalEditReturnTransactionVisible}
+            />
             <TransactionAddModal
               onClose={() =>
                 this.setState({ modalAddTransactionVisible: false })
@@ -208,6 +263,15 @@ export class InvoiceDetailPage extends React.Component {
                   onDelete={id => {
                     this.deleteTransaction(id);
                   }}
+                  onEditReturn={id => {
+                    this.setState({
+                      editReturnTransactionId: id,
+                      modalEditReturnTransactionVisible: true,
+                    });
+                  }}
+                  onDeleteReturn={id => {
+                    this.deleteReturnTransaction(id);
+                  }}
                 />
               </CardBody>
             </Card>
@@ -225,7 +289,7 @@ const mapStateToProps = state => {
 
 const withConnect = connect(
   mapStateToProps,
-  { getInvoice, getProducts, deleteTransaction },
+  { getInvoice, getProducts, deleteTransaction, deleteReturnTransaction },
 );
 
 const withReducer = injectReducer({ key: 'invoiceDetail', reducer });

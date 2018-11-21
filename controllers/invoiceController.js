@@ -3,6 +3,7 @@ const {
   Transaction,
   Customer,
   Product,
+  ReturnTransaction,
   sequelize
 } = require("../models");
 
@@ -57,6 +58,12 @@ const getInvoiceById = async (req, res) => {
           {
             model: Product,
             attributes: ["name", "pinyin"]
+          },
+          {
+            model: ReturnTransaction,
+            attributes: {
+              exclude: ["createdAt", "updatedAt"]
+            }
           }
         ]
       }

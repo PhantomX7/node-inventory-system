@@ -36,6 +36,11 @@ const {
   updateOrderTransaction,
   deleteOrderTransaction
 } = require("../controllers/orderTransactionController");
+const {
+  addReturnTransaction,
+  updateReturnTransaction,
+  deleteReturnTransaction
+} = require("../controllers/returnTransactionController");
 const { getMe } = require("../controllers/authController");
 
 router.get("/me", getMe);
@@ -74,6 +79,11 @@ router.delete("/orderinvoice/:id", deleteOrderInvoice);
 router.post("/ordertransaction", addOrderTransaction);
 router.put("/ordertransaction/:id", updateOrderTransaction);
 router.delete("/ordertransaction/:id", deleteOrderTransaction);
+
+//order return routes
+router.post("/returntransaction", addReturnTransaction);
+router.put("/returntransaction/:id", updateReturnTransaction);
+router.delete("/returntransaction/:id", deleteReturnTransaction);
 
 router.get("/celine", (req, res) => {
   res.send("hello world");

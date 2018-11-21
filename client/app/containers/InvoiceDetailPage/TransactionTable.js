@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -13,7 +13,13 @@ import accounting from 'accounting';
 
 import ConfirmDialog from 'components/ConfirmDialog';
 
-export default ({ transactions = [], onEdit, onDelete }) => (
+export default ({
+  transactions = [],
+  onEdit,
+  onDelete,
+  onEditReturn,
+  onDeleteReturn,
+}) => (
   <Paper>
     <Typography variant="title" id="tableTitle" className="ml-3 pt-3">
       Transaction List
@@ -33,53 +39,125 @@ export default ({ transactions = [], onEdit, onDelete }) => (
       </TableHead>
       <TableBody>
         {transactions.map(transaction => (
-          <TableRow key={transaction.id}>
-            <TableCell component="th" scope="row">
-              {transaction.Product.name}
-            </TableCell>
-            <TableCell>{transaction.Product.pinyin}</TableCell>
-            <TableCell numeric>
-              {accounting.formatMoney(transaction.capital_price, 'Rp. ', 2)}
-            </TableCell>
-            <TableCell numeric>
-              {accounting.formatMoney(transaction.sell_price, 'Rp. ', 2)}
-            </TableCell>
-            <TableCell numeric>{transaction.amount}</TableCell>
-            <TableCell numeric>
-              {accounting.formatMoney(transaction.total_sell_price, 'Rp. ', 2)}
-            </TableCell>
-            <TableCell numeric>
-              {accounting.formatMoney(transaction.profit, 'Rp. ', 2)}
-            </TableCell>
-            <TableCell numeric>
-              <div className="d-flex align-items-center justify-content-between">
-                <Tooltip title="Edit" placement="bottom">
-                  <EditIcon
-                    style={{ fontSize: '16px' }}
-                    className="highlight"
-                    onClick={() => onEdit(transaction.id)}
-                  />
-                </Tooltip>
-                <Tooltip title="Delete" placement="bottom">
-                  <div>
-                    <ConfirmDialog
-                      title="Are you sure?"
-                      content="this cannot be undone"
-                      onYes={() => onDelete(transaction.id)}
-                    >
-                      {handleClickOpen => (
-                        <ClearIcon
-                          style={{ fontSize: '16px' }}
-                          className="highlight"
-                          onClick={handleClickOpen}
-                        />
-                      )}
-                    </ConfirmDialog>
+          <Fragment key={transaction.id}>
+            <TableRow>
+              <TableCell component="th" scope="row">
+                {transaction.Product.name}
+              </TableCell>
+              <TableCell>{transaction.Product.pinyin}</TableCell>
+              <TableCell numeric>
+                {accounting.formatMoney(transaction.capital_price, 'Rp. ', 2)}
+              </TableCell>
+              <TableCell numeric>
+                {accounting.formatMoney(transaction.sell_price, 'Rp. ', 2)}
+              </TableCell>
+              <TableCell numeric>{transaction.amount}</TableCell>
+              <TableCell numeric>
+                {accounting.formatMoney(
+                  transaction.total_sell_price,
+                  'Rp. ',
+                  2,
+                )}
+              </TableCell>
+              <TableCell numeric>
+                {accounting.formatMoney(transaction.profit, 'Rp. ', 2)}
+              </TableCell>
+              <TableCell numeric>
+                <div className="d-flex align-items-center justify-content-between">
+                  <Tooltip title="Edit" placement="bottom">
+                    <EditIcon
+                      style={{ fontSize: '16px' }}
+                      className="highlight"
+                      onClick={() => onEdit(transaction.id)}
+                    />
+                  </Tooltip>
+                  <Tooltip title="Delete" placement="bottom">
+                    <div>
+                      <ConfirmDialog
+                        title="Are you sure?"
+                        content="this cannot be undone"
+                        onYes={() => onDelete(transaction.id)}
+                      >
+                        {handleClickOpen => (
+                          <ClearIcon
+                            style={{ fontSize: '16px' }}
+                            className="highlight"
+                            onClick={handleClickOpen}
+                          />
+                        )}
+                      </ConfirmDialog>
+                    </div>
+                  </Tooltip>
+                </div>
+              </TableCell>
+            </TableRow>
+            {transaction.ReturnTransaction && (
+              <TableRow className="ml-3">
+                <TableCell colSpan="2">Return Item</TableCell>
+                <TableCell numeric>
+                  {accounting.formatMoney(transaction.capital_price, 'Rp. ', 2)}
+                </TableCell>
+                <TableCell numeric>
+                  {accounting.formatMoney(transaction.sell_price, 'Rp. ', 2)}
+                </TableCell>
+                <TableCell numeric>
+                  {transaction.ReturnTransaction.amount}
+                </TableCell>
+                <TableCell numeric>
+                  {accounting.formatMoney(
+                    -(
+                      transaction.sell_price *
+                      transaction.ReturnTransaction.amount
+                    ),
+                    'Rp. ',
+                    2,
+                  )}
+                </TableCell>
+                <TableCell numeric>
+                  {accounting.formatMoney(
+                    -(
+                      (transaction.sell_price - transaction.capital_price) *
+                      transaction.ReturnTransaction.amount
+                    ),
+                    'Rp. ',
+                    2,
+                  )}
+                </TableCell>
+                <TableCell numeric>
+                  <div className="d-flex align-items-center justify-content-between">
+                    <Tooltip title="Edit" placement="bottom">
+                      <EditIcon
+                        style={{ fontSize: '16px' }}
+                        className="highlight"
+                        onClick={() =>
+                          onEditReturn(transaction.ReturnTransaction.id)
+                        }
+                      />
+                    </Tooltip>
+                    <Tooltip title="Delete" placement="bottom">
+                      <div>
+                        <ConfirmDialog
+                          title="Are you sure?"
+                          content="this cannot be undone"
+                          onYes={() =>
+                            onDeleteReturn(transaction.ReturnTransaction.id)
+                          }
+                        >
+                          {handleClickOpen => (
+                            <ClearIcon
+                              style={{ fontSize: '16px' }}
+                              className="highlight"
+                              onClick={handleClickOpen}
+                            />
+                          )}
+                        </ConfirmDialog>
+                      </div>
+                    </Tooltip>
                   </div>
-                </Tooltip>
-              </div>
-            </TableCell>
-          </TableRow>
+                </TableCell>
+              </TableRow>
+            )}
+          </Fragment>
         ))}
       </TableBody>
     </Table>

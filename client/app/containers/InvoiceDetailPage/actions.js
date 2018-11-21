@@ -70,3 +70,21 @@ export function deleteTransaction(id) {
     });
   };
 }
+
+export function addReturnTransaction(values, callback) {
+  return async dispatch => {
+    await axios.post(`${ROOT_URL}/api/returntransaction`, values, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+    });
+    fetchInvoice(dispatch, values.invoiceId);
+    callback();
+  };
+}
+
+export function deleteReturnTransaction(id) {
+  return async () => {
+    await axios.delete(`${ROOT_URL}/api/returntransaction/${id}`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+    });
+  };
+}

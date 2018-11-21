@@ -3,6 +3,7 @@ const {
   StockMutation,
   Product,
   Invoice,
+  ReturnTransaction,
   sequelize
 } = require("../models");
 
@@ -163,17 +164,22 @@ const updateInvoice = async invoiceId => {
   await sequelize.transaction(async tx => {
     const invoice = await Invoice.findOne({
       where: { id: invoiceId },
-      include: [{ model: Transaction }]
+      include: [{ model: Transaction, include: [{ model: ReturnTransaction }] }]
     });
     const { Transactions } = invoice;
     let total_capital = 0;
     let total_sell_price = 0;
     let total_profit = 0;
-    Transactions.forEach(({ capital_price, sell_price, amount, profit }) => {
-      total_capital += capital_price * amount;
-      total_sell_price += sell_price * amount;
-      total_profit += profit;
-    });
+    Transactions.forEach(
+      ({ capital_price, sell_price, amount, ReturnTransaction }) => {
+        if (ReturnTransaction) {
+          amount -= ReturnTransaction.amount;
+        }
+        total_capital += capital_price * amount;
+        total_sell_price += sell_price * amount;
+        total_profit += (sell_price - capital_price) * amount;
+      }
+    );
     await Invoice.update(
       {
         total_capital,

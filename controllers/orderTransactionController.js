@@ -10,7 +10,7 @@ const addOrderTransaction = async (req, res) => {
   try {
     const { orderInvoiceId, productId, buy_price, amount } = req.body;
     const total_buy_price = buy_price * amount;
-    let transaction;
+    let orderTransaction;
     await sequelize.transaction(async tx => {
       const stockMutation = await StockMutation.create(
         {
@@ -58,13 +58,13 @@ const updateOrderTransaction = async (req, res) => {
     const orderTransactionId = req.params.id;
     const { buy_price, amount } = req.body;
     let orderTransaction = await OrderTransaction.findById(orderTransactionId);
-    let { orderInvoiceId, productId } = orderTransaction;
+    let { orderInvoiceId, productId, stockMutationId } = orderTransaction;
 
     await sequelize.transaction(async tx => {
       //delete previous data
 
       await StockMutation.destroy({
-        where: { id: orderTransaction.stockMutationId },
+        where: { id: stockMutationId },
         transaction: tx
       });
 

@@ -66,10 +66,7 @@ class TransactionAddModal extends Component {
             </Button>
           </div>
           <hr className="m-0" />
-          <div
-            className="m-4"
-            style={{ overflowY: 'scroll', height: '80%', padding: '0 3%' }}
-          >
+          <div className="m-4" style={{ height: '80%', padding: '0 3%' }}>
             <form
               className="add-invoice-form"
               onSubmit={handleSubmit(this.handleFormSubmit)}
