@@ -6,7 +6,7 @@ import OrderInvoiceIcon from '@material-ui/icons/NoteAdd';
 
 export default [
   {
-    path: 'dashboard',
+    path: 'main',
     sidebarName: 'Dashboard',
     Icon: DashboardIcon,
   },

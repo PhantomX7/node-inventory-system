@@ -41,9 +41,17 @@ const {
   updateReturnTransaction,
   deleteReturnTransaction
 } = require("../controllers/returnTransactionController");
+const {
+  getOverallMonthlyStatistic,
+  getInvoiceMonthlyReport
+} = require("../controllers/dashboardController");
 const { getMe } = require("../controllers/authController");
 
 router.get("/me", getMe);
+
+//dashboard routes
+router.get("/dashboard/monthlyinvoice", getInvoiceMonthlyReport);
+router.get("/dashboard/monthlystatistic", getOverallMonthlyStatistic);
 
 //product routes
 router.get("/product", getProducts);
@@ -84,9 +92,5 @@ router.delete("/ordertransaction/:id", deleteOrderTransaction);
 router.post("/returntransaction", addReturnTransaction);
 router.put("/returntransaction/:id", updateReturnTransaction);
 router.delete("/returntransaction/:id", deleteReturnTransaction);
-
-router.get("/celine", (req, res) => {
-  res.send("hello world");
-});
 
 module.exports = router;
