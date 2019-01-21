@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "sequelize db:migrate && node index.js",
+    "start": "sequelize db:migrate && sequelize db:seed:all && node index.js",
     "server": "nodemon index.js",
     "client": "npm run start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
