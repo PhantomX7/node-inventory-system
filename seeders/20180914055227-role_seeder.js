@@ -1,7 +1,8 @@
 "use strict";
+const { Role } = require("../models");
 
 module.exports = {
-  up: (queryInterface, Sequelize) => {
+  up: async (queryInterface, Sequelize) => {
     /*
       Add altering commands here.
       Return a promise to correctly handle asynchronicity.
@@ -13,22 +14,25 @@ module.exports = {
       }], {});
 
     */
-    return queryInterface.bulkInsert(
-      "Roles",
-      [
-        {
-          name: "admin",
-          createdAt: new Date(),
-          updatedAt: new Date()
-        },
-        {
-          name: "guest",
-          createdAt: new Date(),
-          updatedAt: new Date()
-        }
-      ],
-      {}
-    );
+    const roles = await Role.findAll();
+    if (!roles) {
+      queryInterface.bulkInsert(
+        "Roles",
+        [
+          {
+            name: "admin",
+            createdAt: new Date(),
+            updatedAt: new Date()
+          },
+          {
+            name: "guest",
+            createdAt: new Date(),
+            updatedAt: new Date()
+          }
+        ],
+        {}
+      );
+    }
   },
 
   down: (queryInterface, Sequelize) => {
