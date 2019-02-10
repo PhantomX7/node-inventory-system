@@ -81,6 +81,16 @@ export function addReturnTransaction(values, callback) {
   };
 }
 
+export function editReturnTransaction(id, values, callback) {
+  return async () => {
+    await axios.put(`${ROOT_URL}/api/returntransaction/${id}`, values, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+    });
+    fetchInvoice(dispatch, values.invoiceId);
+    callback();
+  };
+}
+
 export function deleteReturnTransaction(id) {
   return async () => {
     await axios.delete(`${ROOT_URL}/api/returntransaction/${id}`, {
