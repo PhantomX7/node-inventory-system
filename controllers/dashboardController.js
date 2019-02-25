@@ -11,7 +11,7 @@ const {
 const getOverallMonthlyStatistic = async (req, res) => {
   const { month, year } = req.query;
 
-  const startdate = moment(`${year}-${month}-01`);
+  const startdate = moment(`${year}-${month}-01`,"YYYY-MM-DD");
 
   const income = await Invoice.sum("total_profit", {
     where: {
@@ -23,8 +23,46 @@ const getOverallMonthlyStatistic = async (req, res) => {
       }
     }
   });
+
+  const incomeCash = await Invoice.sum("total_profit", {
+    where: {
+      payment_type: "Cash",
+      date: {
+        $between: [
+          startdate.startOf("month").format("YYYY-MM-DD"),
+          startdate.endOf("month").format("YYYY-MM-DD")
+        ]
+      }
+    }
+  });
+
+  const totalSales = await Invoice.sum("total_sell_price", {
+    where: {
+      date: {
+        $between: [
+          startdate.startOf("month").format("YYYY-MM-DD"),
+          startdate.endOf("month").format("YYYY-MM-DD")
+        ]
+      }
+    }
+  });
+
+  const totalCashSales = await Invoice.sum("total_sell_price", {
+    where: {
+      payment_type: "Cash",
+      date: {
+        $between: [
+          startdate.startOf("month").format("YYYY-MM-DD"),
+          startdate.endOf("month").format("YYYY-MM-DD")
+        ]
+      }
+    }
+  });
   res.status(200).json({
-    income
+    income,
+    incomeCash,
+    totalSales,
+    totalCashSales
   });
 };
 

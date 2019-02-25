@@ -34,7 +34,7 @@ const addReturnTransaction = async (req, res) => {
       const currentStock = currentProduct.stock;
       await Product.update(
         {
-          stock: parseInt(currentStock) + parseInt(amount)
+          stock: +currentStock + +amount
         },
         { where: { id: productId }, transaction: tx }
       );
@@ -91,7 +91,7 @@ const updateReturnTransaction = async (req, res) => {
 
       await Product.update(
         {
-          stock: currentStock - parseInt(returnTransaction.amount - amount)
+          stock: currentStock - (returnTransaction.amount - amount)
         },
         { where: { id: productId }, transaction: tx }
       );

@@ -24,7 +24,7 @@ const addOrderTransaction = async (req, res) => {
       const currentStock = currentProduct.stock;
       await Product.update(
         {
-          stock: parseInt(currentStock) + parseInt(amount)
+          stock: +currentStock + +amount
         },
         { where: { id: productId }, transaction: tx }
       );
@@ -84,7 +84,7 @@ const updateOrderTransaction = async (req, res) => {
 
       await Product.update(
         {
-          stock: currentStock - parseInt(orderTransaction.amount - amount)
+          stock: currentStock - (orderTransaction.amount - amount)
         },
         { where: { id: productId }, transaction: tx }
       );

@@ -6,7 +6,12 @@
 
 import { GET_STATISTIC, EMPTY_STATISTIC } from './constants';
 
-export const initialState = { income: 0 };
+export const initialState = {
+  income: 0,
+  incomeCash: 0,
+  totalSales: 0,
+  totalCashSales: 0,
+};
 
 function invoicePageReducer(state = initialState, action) {
   switch (action.type) {

@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
       pinyin: { type: DataTypes.STRING },
       image_url: { type: DataTypes.STRING },
       stock: {
-        type: DataTypes.INTEGER,
-        validate: { min: 0, isInt: true },
+        type: DataTypes.DOUBLE,
+        validate: { min: 0, isDecimal: true },
         allowNull: false
       },
       unit: { type: DataTypes.STRING, allowNull: false },

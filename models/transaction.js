@@ -15,7 +15,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: { min: 0, isDecimal: true }
       },
-      amount: { type: DataTypes.INTEGER, allowNull: false },
+      amount: {
+        type: DataTypes.DOUBLE,
+        validate: { min: 0, isDecimal: true },
+        allowNull: false
+      },
       total_sell_price: {
         type: DataTypes.DOUBLE,
         allowNull: false,

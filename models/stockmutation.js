@@ -4,7 +4,11 @@ module.exports = (sequelize, DataTypes) => {
     "StockMutation",
     {
       productId: { type: DataTypes.INTEGER, allowNull: false },
-      amount: { type: DataTypes.INTEGER, allowNull: false },
+      amount: {
+        type: DataTypes.DOUBLE,
+        validate: { min: 0, isDecimal: true },
+        allowNull: false
+      },
       type: { type: DataTypes.ENUM, values: ["IN", "OUT"] }
     },
     { timestamps: true }

@@ -51,6 +51,7 @@ class InvoiceAddModal extends Component {
   renderCustomersName(id) {
     const { customers } = this.props;
     if (!customers || !id) return '';
+    console.log(customers)
     const { name } = customers.find(customer => customer.id === id);
     return name;
   }

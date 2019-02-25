@@ -5,7 +5,11 @@ module.exports = (sequelize, DataTypes) => {
     {
       orderInvoiceId: { type: DataTypes.INTEGER, allowNull: false },
       productId: { type: DataTypes.INTEGER, allowNull: false },
-      amount: { type: DataTypes.INTEGER, allowNull: false },
+      amount: {
+        type: DataTypes.DOUBLE,
+        validate: { min: 0, isDecimal: true },
+        allowNull: false
+      },
       buy_price: {
         type: DataTypes.DOUBLE,
         allowNull: false,

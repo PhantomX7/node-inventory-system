@@ -32,7 +32,7 @@ export class DashboardMainPage extends React.Component {
 
   render() {
     const { statistic } = this.props;
-    const { income } = statistic;
+    const { income, incomeCash, totalSales, totalCashSales } = statistic;
     return (
       <div>
         <Helmet>
@@ -51,6 +51,72 @@ export class DashboardMainPage extends React.Component {
                 </div>
                 <h5 className="text-dark">
                   {accounting.formatMoney(income, 'Rp. ', 2)}
+                </h5>
+              </CardHeader>
+              <CardFooter stats>
+                <div>
+                  <a href="#pablo" onClick={e => e.preventDefault()}>
+                    View Details
+                  </a>
+                </div>
+              </CardFooter>
+            </Card>
+          </GridItem>
+          <GridItem xs={12} sm={6} md={3}>
+            <Card>
+              <CardHeader color="success" stats icon>
+                <CardIcon color="success">
+                  <IncomeIcon />
+                </CardIcon>
+                <div className="text-muted pt-1 pr-1">
+                  <big>Monthly Incomes Cash</big>
+                </div>
+                <h5 className="text-dark">
+                  {accounting.formatMoney(incomeCash, 'Rp. ', 2)}
+                </h5>
+              </CardHeader>
+              <CardFooter stats>
+                <div>
+                  <a href="#pablo" onClick={e => e.preventDefault()}>
+                    View Details
+                  </a>
+                </div>
+              </CardFooter>
+            </Card>
+          </GridItem>
+          <GridItem xs={12} sm={6} md={3}>
+            <Card>
+              <CardHeader color="success" stats icon>
+                <CardIcon color="success">
+                  <IncomeIcon />
+                </CardIcon>
+                <div className="text-muted pt-1 pr-1">
+                  <big>Monthly Sales</big>
+                </div>
+                <h5 className="text-dark">
+                  {accounting.formatMoney(totalSales, 'Rp. ', 2)}
+                </h5>
+              </CardHeader>
+              <CardFooter stats>
+                <div>
+                  <a href="#pablo" onClick={e => e.preventDefault()}>
+                    View Details
+                  </a>
+                </div>
+              </CardFooter>
+            </Card>
+          </GridItem>
+          <GridItem xs={12} sm={6} md={3}>
+            <Card>
+              <CardHeader color="success" stats icon>
+                <CardIcon color="success">
+                  <IncomeIcon />
+                </CardIcon>
+                <div className="text-muted pt-1 pr-1">
+                  <big>Monthly Cash Sales</big>
+                </div>
+                <h5 className="text-dark">
+                  {accounting.formatMoney(totalCashSales, 'Rp. ', 2)}
                 </h5>
               </CardHeader>
               <CardFooter stats>
