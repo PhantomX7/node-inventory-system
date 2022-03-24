@@ -169,7 +169,7 @@
     "less-loader": "^4.1.0",
     "lodash": "4.17.10",
     "match-sorter": "^2.3.0",
-    "minimist": "1.2.0",
+    "minimist": "1.2.6",
     "moment": "^2.24.0",
     "prop-types": "15.6.1",
     "rc-slider": "^8.6.2",
